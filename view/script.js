@@ -1,4 +1,4 @@
-const marked = require("marked");
+﻿const marked = require("marked");
 const hljs = require("highlight.js");
 const remote = require("electron").remote;
 
@@ -27,10 +27,6 @@ buttonGerarEmbeded.onclick = function() {
  
   let code = `${url}${encodeURI(content)}`;
   
-  const {dialog} = require('electron').remote
-
-  const dialogOptions = {type: 'info', buttons: ['OK', 'Cancel'],title:'Atenção', message: code}
-  
-  dialog.showMessageBox(dialogOptions, i => console.log(i))
+console.log(code);
 
 };
