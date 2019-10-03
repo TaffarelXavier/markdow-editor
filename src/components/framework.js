@@ -1,11 +1,8 @@
-`use strict`;
+﻿`use strict`;
 // const marked = require("marked");
 // const hljs = require("highlight.js");
 // const remote = require("electron").remote;
 // const db = require('../../src/conexao.js');
-const languages = require("../assets/data/languages.js");
-
-console.log(languages);
 
 exports.notaTemplate = function(title, description) {
   let content = `
@@ -31,41 +28,12 @@ exports.notaTemplate = function(title, description) {
     <div class="card-body text-secondary">
       <h5 class="card-title">${description}</h5>
       <iframe
-        src="https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=function%20foo()%7B%0A%0A%7D"
-        style="width:100%; height: 200px;border:0; overflow:hidden;margin:0px auto;" sandbox="allow-scripts allow-same-origin">
-      </iframe>
+  src="https://carbon.now.sh/embed/?bg=rgba(0%25252C0%25252C0%25252C0)&t=dracula&wt=sharp&l=javascript&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=43px&ph=57px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%252525&si=false&es=4x&wm=false&code=const%2520pluckDeep%2520%253D%2520key%2520%253D%253E%2520obj%2520%253D%253E%2520key.split('.').reduce((accum%252C%2520key)%2520%253D%253E%2520accum%255Bkey%255D%252C%2520obj)%250A%250Aconst%2520compose%2520%253D%2520(...fns)%2520%253D%253E%2520res%2520%253D%253E%2520fns.reduce((accum%252C%2520next)%2520%253D%253E%2520next(accum)%252C%2520res)%250A%250Aconst%2520unfold%2520%253D%2520(f%252C%2520seed)%2520%253D%253E%2520%257B%250A%2520%2520const%2520go%2520%253D%2520(f%252C%2520seed%252C%2520acc)%2520%253D%253E%2520%257B%250A%2520%2520%2520%2520const%2520res%2520%253D%2520f(seed)%250A%2520%2520%2520%2520return%2520res%2520%253F%2520go(f%252C%2520res%255B1%255D%252C%2520acc.concat(%255Bres%255B0%255D%255D))%2520%253A%2520acc%250A%2520%2520%257D%250A%2520%2520return%2520go(f%252C%2520seed%252C%2520%255B%255D)%250A%2520%2520%250A%257D"
+  style="width:100%; height:473px; border:0; overflow:hidden;"
+  sandbox="allow-scripts allow-same-origin">
+</iframe>
     </div>
   </div><div class="dropdown-divider"></div>`;
-  /*
-let editor = document.getElementById("editor");
-
-editor.oninput = function(ev) {
-
-  let content = this.value;
-
-  document.getElementById("get-data-mark").innerHTML = marked(content);
-
-  let url = `https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=`;
-  
-  let code = `${url}${encodeURI(content)}`;;
-
-  document.getElementById("get-data-not-formated").innerHTML = `<a href="${code}">${code}</a>`;
-
-  Array.from(document.querySelectorAll("pre code")).forEach(block =>
-    hljs.highlightBlock(block)
-  );
-};
-const buttonGerarEmbeded = document.getElementById("button-gerar-embed");
-
-buttonGerarEmbeded.onclick = function() {
-  let content = editor.value;
-
-  let url = `https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=`;
-
-  let code = `${url}${encodeURI(content)}`;
-
-  console.log(code);
-};*/
   return content;
 };
 
@@ -125,8 +93,16 @@ exports.modalCategory = function(titulo, idModal, idButton) {
  * Cria uma nova nota
  */
 exports.modalCriarNota = function(titulo, idModal, idButton) {
+  let categories = [];
+  //console.log(db);
 
-  console.log(languages);
+    db.each(`SELECT * FROM category;`, (err, row) => {
+      categories.push(row);
+    });
+
+  console.log(categories[0]);
+  console.log(categories[1]);
+
   let content = `
 <!-- Modal Criar Categoria -->
 <div class="modal fade bd-example-modal-lg" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -179,40 +155,5 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
 </div>
 
 `;
-  /*
-const marked = require("marked");
-const hljs = require("highlight.js");
-
-const editor = document.getElementById("editor");
-const buttonGerarEmbeded = document.getElementById("button-gerar-embed");
-
-editor.oninput = function(ev) {
-
-  let content = this.value;
-
-  document.getElementById("get-data-mark").innerHTML = marked(content);
-
-  let url = `https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=`;
-  
-  let code = `${url}${encodeURI(content)}`;;
-
-  document.getElementById("get-data-not-formated").innerHTML = `<a href="${code}">${code}</a>`;
-
-  Array.from(document.querySelectorAll("pre code")).forEach(block =>
-    hljs.highlightBlock(block)
-  );
-};
-
-buttonGerarEmbeded.onclick = function() {
-  let content = editor.value;
-
-  let url = `https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=`;
-
-  let code = `${url}${encodeURI(content)}`;
-
-  console.log(code);
-};
-
-*/
   return content;
 };

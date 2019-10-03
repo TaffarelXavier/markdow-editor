@@ -11,14 +11,15 @@ function createWindow() {
   win = new BrowserWindow({
     width: width - 200,
     height: height - 100,
-    frame: false,
+    frame: false, //Definir os campos de cima
     webPreferences: {
       nodeIntegration: true,
       devTools: true
     }
   });
 
-  win.webContents.openDevTools()
+  //Abrir o DevTools do nevegador
+  //win.webContents.openDevTools()
 
   win.loadURL(
     url.format({
