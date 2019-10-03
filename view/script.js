@@ -1,32 +1,32 @@
 ﻿const marked = require("marked");
 const hljs = require("highlight.js");
-const remote = require("electron").remote;
 
-const close = e => {
-  const window = remote.getCurrentWindow();
-  window.close();
-};
-
-document.querySelector(".close").addEventListener("click", close);
-
-let editor = document.getElementById("editor");
+const editor = document.getElementById("editor");
+const buttonGerarEmbeded = document.getElementById("button-gerar-embed");
 
 editor.oninput = function(ev) {
-  //console.log(``);
-  /*
-  document.getElementById('get-data-mark').innerHTML =  marked(this.value);
-  Array.from(document.querySelectorAll('pre code')).forEach(
-    block => hljs.highlightBlock(block))*/
+
+  let content = this.value;
+
+  document.getElementById("get-data-mark").innerHTML = marked(content);
+
+  let url = `https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=`;
+  
+  let code = `${url}${encodeURI(content)}`;;
+
+  document.getElementById("get-data-not-formated").innerHTML = `<a href="${code}">${code}</a>`;
+
+  Array.from(document.querySelectorAll("pre code")).forEach(block =>
+    hljs.highlightBlock(block)
+  );
 };
-const buttonGerarEmbeded = document.getElementById("button-gerar-embed");
 
 buttonGerarEmbeded.onclick = function() {
   let content = editor.value;
- 
-  let url = `https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=`;
- 
-  let code = `${url}${encodeURI(content)}`;
-  
-console.log(code);
 
+  let url = `https://carbon.now.sh/embed/?bg=rgba(0,0,0,0)&t=dracula&l=auto&ds=true&wc=true&wa=true&pv=15px&ph=15px&ln=false&code=`;
+
+  let code = `${url}${encodeURI(content)}`;
+
+  console.log(code);
 };

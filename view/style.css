@@ -1,15 +1,19 @@
-@import url('https://fonts.googleapis.com/css?family=Lato|Playfair+Display');
+@import url("https://fonts.googleapis.com/css?family=Lato|Playfair+Display");
 
 .container {
   margin-left: 10%;
   margin-right: 10%;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   padding-bottom: 50vh;
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   text-align: center;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 
 li {
@@ -20,22 +24,23 @@ p {
   font-size: 16px;
 }
 
-input, button {
+input,
+button {
   text-decoration: none;
-  color: pink;
+  /* color: pink; */
   background-color: transparent;
   font-size: 30px;
   border: none;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 input {
-  color: #43a047;
+  /* color: #43a047; */
 }
 
 button {
-  color: #ef5350;
-  float: right;
+  /* color: #ef5350; */
+  /* float: right; */
   font-size: 25px;
 }
 

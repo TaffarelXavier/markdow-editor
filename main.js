@@ -9,19 +9,22 @@ function createWindow() {
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
   win = new BrowserWindow({
-    width: width - 100,
+    width: width - 200,
     height: height - 100,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
-    },
+      devTools: true
+    }
   });
+
+  win.webContents.openDevTools()
 
   win.loadURL(
     url.format({
       pathname: path.join(__dirname, "view/index.html"),
       protocol: "file:",
-      slashes: true,
+      slashes: true
     })
   );
 
