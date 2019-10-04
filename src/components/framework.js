@@ -93,16 +93,9 @@ exports.modalCategory = function(titulo, idModal, idButton) {
  * Cria uma nova nota
  */
 exports.modalCriarNota = function(titulo, idModal, idButton) {
-  let categories = [];
-  //console.log(db);
-
-    db.each(`SELECT * FROM category;`, (err, row) => {
-      categories.push(row);
-    });
-
-  console.log(categories[0]);
-  console.log(categories[1]);
-
+  sqlite.connect("./src/db/notes_db.db");
+  let categories = sqlite.run("SELECT * FROM category;");
+  sqlite.close();
   let content = `
 <!-- Modal Criar Categoria -->
 <div class="modal fade bd-example-modal-lg" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -115,31 +108,33 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
       </button>
     </div>
     <div class="modal-body">
-      <form>
+      <form id="formSave">
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Título:</strong></label>
-          <input type="text" class="form-control">
+          <input type="text" name="title" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Descrição:</strong></label>
-          <input type="text" class="form-control">
+          <input type="text" name="description" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
-          <input type="text" class="form-control">
+          <input type="text" name="tags" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="message-text" class="col-form-label"><strong>Linguagem:</strong></label>
-          <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-          <option selected>Choose...</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
+          <select class="custom-select mr-sm-2" name="languages">
+          <option selected>Choose...</option>`;
+
+  for (let data of categories) {
+    content += `<option value="${data.category_id}">${data.category_name}</option>`;
+  }
+
+  content += `</select>
         </div>
         <div class="form-group">
           <label for="message-text" class="col-form-label"><strong>Texto:</strong></label>
-          <textarea class="form-control" id="editor"></textarea>
+          <textarea class="form-control" name="editor" id="editor"></textarea>
         </div>
         <div id="get-data-mark"></div>
         <div id="get-data-not-formated"></div>
@@ -148,12 +143,45 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-      <button type="button" class="btn btn-primary">Salvar nova nota</button>
+      <button type="submit" form="formSave" class="btn btn-primary" id="salvarNota">Salvar nova nota</button>
     </div>
   </div>
 </div>
 </div>
+<script>
+setTimeout(() => {
+  
+}, 100);
 
+$('#formSave').submit(function(ev){
+  ev.preventDefault();
+  let title = this.elements.title.value;
+  let description = this.elements.description.value;
+  let tags = this.elements.tags.value;
+ 
+
+  let sql = 'INSERT INTO category(category_name) VALUES (?)';
+
+  db.run(sql, ['category'], function (err) {
+    if (err) {
+      return console.error(err.message);
+    }
+    if(this.changes > 0){
+      alert("Categoria criada com sucesso!");
+    }
+  });
+
+  // close the database connection
+  db.close();
+ console.log(title);
+  console.log(description);
+  console.log(tags);
+  return false;
+})
+$("#salvarNota").click(function(){
+
+});
+</script>
 `;
   return content;
 };

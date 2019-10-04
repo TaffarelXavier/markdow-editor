@@ -44,61 +44,66 @@
   <div class="container-fluid">
     <br />
     <div class="row">
-      <!-- CATEGORIAS -->
-      <div class="col-sm-3 col-md-4">
-        <div class="alert alert-success">
-          <button class="float-right" title="Clique para adicionar uma nova categoria" data-toggle="modal"
-            data-target="#exampleModal" id="abrir-modal-criador-categoria">
-            <i class="material-icons">
-              add_circle_outline
-            </i>
-          </button>
-          <strong>Suas Categorias:</strong>
-        </div>
-        <div class="input-group mb-3">
-          <input type="search" class="form-control" placeholder="Pesquisar por nome, descrição ou linguagem" autofocus>
-        </div>
-        <ul class="list-group" id="category">
-        </ul>
-      </div>
-      <!-- CONTEÚDO -->
-      <div class="col-sm-9 col-md-8">
+      <div class="col-sm-8 col-md-8">
         <div class="row">
-          <div class="col-md-12">
-            <!-- PESQUISAR NOTAS -->
+          <!-- CATEGORIAS -->
+          <div class="col-sm-3 col-md-3">
+            <div class="alert alert-success">
+              <button class="float-right" title="Clique para adicionar uma nova categoria" data-toggle="modal"
+                data-target="#exampleModal" id="abrir-modal-criador-categoria">
+                <i class="material-icons">
+                  add_circle_outline
+                </i>
+              </button>
+              <strong>Suas Categorias:</strong>
+            </div>
             <div class="input-group mb-3">
-              <div class="input-group-prepend" style="border:0px solid red;">
-                <button class="" style="border:0px solid lime;height: 50%;margin-top:40%;">
-                  <i class="material-icons">
-                    search
-                  </i>
-                </button>
-              </div>
               <input type="search" class="form-control" placeholder="Pesquisar por nome, descrição ou linguagem"
                 autofocus>
-              <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
-                <span class="material-icons mdc-fab__icon">add</span>
-                <span class="mdc-fab__label">Criar nova nota</span>
-              </button>
             </div>
+            <ul class="list-group" id="category">
+            </ul>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div id="get-notes">
-              <div style="display: flex;
-              height: 400px;
-              text-align: center;
-              flex-direction: column;
-              justify-content: center;
-              align-content: center;
-              align-items: center;">
-                <h3>Hey!</h3>
-                <h4>Você não tem nenhuma nota.</h4>
-                <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
-                  <span class="material-icons mdc-fab__icon">add</span>
-                  <span class="mdc-fab__label">Criar nova nota :)</span>
-                </button>
+          <!-- CONTEÚDO -->
+          <div class="col-sm-9 col-md-9">
+            <div class="row">
+              <div class="col-md-12">
+                <!-- PESQUISAR NOTAS -->
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend" style="border:0px solid red;">
+                    <button class="" style="border:0px solid lime;height: 50%;margin-top:40%;">
+                      <i class="material-icons">
+                        search
+                      </i>
+                    </button>
+                  </div>
+                  <input type="search" class="form-control" placeholder="Pesquisar por nome, descrição ou linguagem"
+                    autofocus>
+                  <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
+                    <span class="material-icons mdc-fab__icon">add</span>
+                    <span class="mdc-fab__label">Criar nova nota</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div id="get-notes">
+                  <div style="display: flex;
+          height: 400px;
+          text-align: center;
+          flex-direction: column;
+          justify-content: center;
+          align-content: center;
+          align-items: center;">
+                    <h3>Hey!</h3>
+                    <h4>Você não tem nenhuma nota.</h4>
+                    <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
+                      <span class="material-icons mdc-fab__icon">add</span>
+                      <span class="mdc-fab__label">Criar nova nota :)</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -108,14 +113,21 @@
   </div>
   <!-- <script src="./script.js"></script> -->
   <script>
-
+    setTimeout(() => {
+      console.clear();
+    }, 100);
     const sqlite = require('sqlite-sync'); //requiring
     const $ = require('jQuery');
     const db = require('../src/conexao.js');
     const { notaTemplate, modalCategory, modalCriarNota } = require('../src/components/framework.js');
     const remote = require("electron").remote;
+
     console.log(remote.app.getPath('userData'));
 
+
+    sqlite.connect('./src/db/notes_db.db');
+    console.log(sqlite.run("select sqlite_version()"));
+    sqlite.close();
 
     // Pode usar o jQuery normalmente agora.
     $(document).ready(function () {
@@ -124,11 +136,8 @@
         .click(function () {
           setTimeout(function () { $('#category-name').focus().select() }, 500);
         });
-
-  
-      
       setTimeout(function () {
-        
+
       }, 2000);
       $('body').append(
         modalCategory("Criar nova categoria", "exampleModal", "idButton1"),
@@ -149,12 +158,14 @@
 
         var rows = document.getElementById("category");
 
-        db.each(`SELECT * FROM category;`, (err, row) => {
+        db.each(`SELECT note_category_id,category_id, category_name, COUNT(*) as count FROM notes as t1
+JOIN category as t2 ON t2.category_id = t1.note_category_id
+GROUP BY note_category_id`, (err, row) => {
 
           if (err) {
             console.error(err.message);
           }
-
+          console.log(row);
           var item = document.createElement("li");
 
           item.onclick = function () {
@@ -173,8 +184,9 @@
             $("#get-notes").html(content);
             return false;
           }
+
           $(item).addClass('list-group-item d-flex justify-content-between align-items-center')
-            .html(row.category_name.toUpperCase() + " <span class='badge badge-primary badge-pill'>0</span>").
+            .html(row.category_name.toUpperCase() + ` <span class='badge badge-primary badge-pill'>${row.count}</span>`).
             attr("data-category", JSON.stringify(row)).attr("title", row.category_name.toUpperCase());
 
           rows.appendChild(item);
@@ -192,8 +204,8 @@
 
     document.querySelector("#close-this-window").addEventListener("click", close);
 
-
     require('bootstrap-material-design');
+
   </script>
 </body>
 
