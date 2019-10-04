@@ -159,7 +159,6 @@ $('#formSave').submit(function(ev){
   let description = this.elements.description.value;
   let tags = this.elements.tags.value;
  
-
   let sql = 'INSERT INTO category(category_name) VALUES (?)';
 
   db.run(sql, ['category'], function (err) {
@@ -172,7 +171,7 @@ $('#formSave').submit(function(ev){
   });
 
   // close the database connection
-  db.close();
+  //db.close();
  console.log(title);
   console.log(description);
   console.log(tags);
