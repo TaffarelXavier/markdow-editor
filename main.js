@@ -9,7 +9,7 @@ function createWindow() {
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
   win = new BrowserWindow({
-    width: width - 200,
+    width: 1200,
     height: height - 100,
     frame: true, //Definir os campos de cima
     webPreferences: {
@@ -19,11 +19,11 @@ function createWindow() {
   });
 
   //Abrir o DevTools do nevegador
-  //win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   win.loadURL(
     url.format({
-      pathname: path.join(__dirname, "view/index.html"),
+      pathname: path.join(__dirname,"public/index.html"),
       protocol: "file:",
       slashes: true
     })

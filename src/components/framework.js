@@ -4,11 +4,20 @@
 // const remote = require("electron").remote;
 // const db = require('../../src/conexao.js');
 
-exports.notaTemplate = function(title, description) {
+function escapeHtml(unsafe) {
+  return unsafe
+       .replace(/&/g, "&amp;")
+       .replace(/</g, "&lt;")
+       .replace(/>/g, "&gt;")
+       .replace(/"/g, "&quot;")
+       .replace(/'/g, "&#039;");
+}
+
+exports.notas = function({note_id, note_title, note_description, note_code, note_type_language}) {
   let content = `
-    <div class="card border-secondary mb-12">
+    <div class="card mb-10">
     <div class="card-header">
-      <h5 class="card-title float-left"><strong>${title}</strong></h5>
+      <h5 class="card-title float-left"><strong><b>${note_title}</b></strong></h5>
       <button class="float-right">
         <i class="material-icons">
           refresh
@@ -26,14 +35,12 @@ exports.notaTemplate = function(title, description) {
       </button>
     </div>
     <div class="card-body text-secondary">
-      <h5 class="card-title">${description}</h5>
-      <iframe
-  src="https://carbon.now.sh/embed/?bg=rgba(0%25252C0%25252C0%25252C0)&t=dracula&wt=sharp&l=javascript&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=43px&ph=57px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%252525&si=false&es=4x&wm=false&code=const%2520pluckDeep%2520%253D%2520key%2520%253D%253E%2520obj%2520%253D%253E%2520key.split('.').reduce((accum%252C%2520key)%2520%253D%253E%2520accum%255Bkey%255D%252C%2520obj)%250A%250Aconst%2520compose%2520%253D%2520(...fns)%2520%253D%253E%2520res%2520%253D%253E%2520fns.reduce((accum%252C%2520next)%2520%253D%253E%2520next(accum)%252C%2520res)%250A%250Aconst%2520unfold%2520%253D%2520(f%252C%2520seed)%2520%253D%253E%2520%257B%250A%2520%2520const%2520go%2520%253D%2520(f%252C%2520seed%252C%2520acc)%2520%253D%253E%2520%257B%250A%2520%2520%2520%2520const%2520res%2520%253D%2520f(seed)%250A%2520%2520%2520%2520return%2520res%2520%253F%2520go(f%252C%2520res%255B1%255D%252C%2520acc.concat(%255Bres%255B0%255D%255D))%2520%253A%2520acc%250A%2520%2520%257D%250A%2520%2520return%2520go(f%252C%2520seed%252C%2520%255B%255D)%250A%2520%2520%250A%257D"
-  style="width:100%; height:473px; border:0; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin">
-</iframe>
+      <p class="card-title">${note_description}</p>
+      <i class="material-icons copiar" data-id="${note_id}" id="copiar_${note_id}" title="Clique para copiar">file_copy</i>
+      <pre><code class="${note_type_language}" id="note_${note_id}">${escapeHtml(note_code)}</code></pre>
     </div>
-  </div><div class="dropdown-divider"></div>`;
+  </div>
+  <div class="dropdown-divider"></div>`;
   return content;
 };
 
