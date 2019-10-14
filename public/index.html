@@ -257,6 +257,7 @@
         });
 
         $("#formSave").submit(function(ev) {
+
           ev.preventDefault();
           let title = this.elements.title.value;
           let description = this.elements.description.value;
@@ -341,7 +342,9 @@
 
                   //Ao clicar no botão de copiar
                   $(".copiar").each(function(index, element) {
+                    
                     $(this).click(function(ev) {
+
                       let note_id = $(this).attr("data-id");
 
                       clipboard.writeText($(`#note_${note_id}`).text());
@@ -353,8 +356,6 @@
                       };
 
                       $.snackbar(options);
-
-                      // $("#snackbarid").snackbar("show");
                     });
                   });
 
