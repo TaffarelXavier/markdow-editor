@@ -12,7 +12,9 @@ function escapeHtml(unsafe) {
        .replace(/"/g, "&quot;")
        .replace(/'/g, "&#039;");
 }
-
+/**
+ * Mostra as notas
+ */
 exports.notas = function({note_id, note_title, note_description, note_code, note_type_language}) {
   let content = `
     <div class="card mb-10">
@@ -45,7 +47,7 @@ exports.notas = function({note_id, note_title, note_description, note_code, note
 };
 
 /**
- *
+ *Criar categoria
  */
 exports.modalCategory = function(titulo, idModal, idButton) {
   return `
@@ -76,7 +78,7 @@ exports.modalCategory = function(titulo, idModal, idButton) {
     </div>
   </div><script>
 
-  $('#${idButton}').click(function () {
+  /*$('#${idButton}').click(function () {
 
     let categoryName = $('#category-name').val().trim();
 
@@ -86,14 +88,18 @@ exports.modalCategory = function(titulo, idModal, idButton) {
       if (err) {
         return console.error(err.message);
       }
+      
+      let lastId = this.lastID;
+
       if(this.changes > 0){
         alert("Categoria criada com sucesso!");
+        console.log(\`A row has been inserted with rowid \${lastId\}\`);
       }
     });
   
     // close the database connection
     db.close();
-  });</script>`;
+  });*/</script>`;
 };
 
 /**
@@ -140,8 +146,8 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
   content += `</select>
         </div>
         <div class="form-group">
-          <label for="message-text" class="col-form-label"><strong>Texto:</strong></label>
-          <textarea class="form-control" name="editor" id="editor"></textarea>
+          <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
+          <textarea class="form-control" name="code" id="code"></textarea>
         </div>
         <div id="get-data-mark"></div>
         <div id="get-data-not-formated"></div>
@@ -159,34 +165,6 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
 setTimeout(() => {
   
 }, 100);
-
-$('#formSave').submit(function(ev){
-  ev.preventDefault();
-  let title = this.elements.title.value;
-  let description = this.elements.description.value;
-  let tags = this.elements.tags.value;
- 
-  let sql = 'INSERT INTO category(category_name) VALUES (?)';
-
-  db.run(sql, ['category'], function (err) {
-    if (err) {
-      return console.error(err.message);
-    }
-    if(this.changes > 0){
-      alert("Categoria criada com sucesso!");
-    }
-  });
-
-  // close the database connection
-  //db.close();
- console.log(title);
-  console.log(description);
-  console.log(tags);
-  return false;
-})
-$("#salvarNota").click(function(){
-
-});
 </script>
 `;
   return content;
