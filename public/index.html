@@ -1,187 +1,126 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>My SnipperCodeTX</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
-    />
-    <link
-      rel="stylesheet"
-      href="assets/css/bootstrap-material-design.min.css"
-    />
-    <link rel="stylesheet" href="assets/css/material-components-web.min.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <!-- <link rel="stylesheet" href="assets/css/estilizacao.min.css" /> -->
-    <link rel="stylesheet" href="assets/css/dracula.min.css" />
-    <script src="assets/js/highlight.min.js"></script>
-    <!-- <link rel="stylesheet" href="assets/css/github.min.css" /> -->
-    <!-- <link rel="stylesheet" href="assets/css/materialize.min.css" /> -->
-    <style>
-      .list-group-item,
-      .copiar {
-        cursor: pointer;
-      }
-      .card-title {
-        text-align: left;
-      }
-      .card {
-        border: 0px solid red;
-        border-radius: 5px;
-      }
-    </style>
-  </head>
+<html lang="pt-br">
 
-  <body
-    style="border:0px solid #ccc;padding:0px;position: absolute;overflow: auto; width:100%;height: 100%; "
-  >
-    <!-- NAV BAR -->
-    <header
-      class="mdc-top-app-bar"
-      style="background:#018786;max-width: 100% !important;padding:0px !important;"
-    >
-      <div class="mdc-top-app-bar__row">
-        <section
-          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"
-        >
-          <span class="mdc-top-app-bar__title">My SnipperCodeTX</span>
-        </section>
-        <section
-          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end"
-        >
-          <button
-            onclick="javascript:window.location.reload()"
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            aria-label="Download"
-          >
-            refresh
-          </button>
-          <button
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            aria-label="Download"
-          >
-            file_download
-          </button>
-          <button
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            aria-label="Print this page"
-          >
-            print
-          </button>
-          <button
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            aria-label="Bookmark this page"
-            id="close-this-window"
-          >
-            close
-          </button>
-        </section>
-      </div>
-    </header>
-    <br /><br />
-    <div class="container-fluid">
-      <br />
-      <div class="row">
-        <div class="col-sm-12 col-md-12">
-          <div class="row">
-            <!-- CATEGORIAS -->
-            <div class="col-sm-4 col-md-4">
-              <div class="alert alert-success">
-                <button
-                  class="float-right"
-                  title="Clique para adicionar uma nova categoria"
-                  data-toggle="modal"
-                  data-target="#exampleModal"
-                  id="abrir-modal-criador-categoria"
-                >
-                  <i class="material-icons">
-                    add_circle_outline
-                  </i>
-                </button>
-                <strong>Suas Categorias:</strong>
-              </div>
-              <div class="input-group mb-3">
-                <input
-                  type="search"
-                  class="form-control"
-                  placeholder="Pesquisar por nome, descrição ou linguagem"
-                  autofocus
-                />
-              </div>
-              <ul class="list-group" id="category">
-                <li class="list-group-item list-group-item-action">
-                  Carregando categorias...
-                </li>
-              </ul>
+<head>
+  <meta charset="UTF-8" />
+  <title>My SnipperCodeTX</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
+  <link rel="stylesheet" href="assets/css/bootstrap-material-design.min.css" />
+  <link rel="stylesheet" href="assets/css/material-components-web.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="assets/css/dracula.min.css" />
+  <script src="assets/js/highlight.min.js"></script>
+  <style>
+    .list-group-item,
+    .copiar {
+      cursor: pointer;
+    }
+
+    .card-title {
+      text-align: left;
+    }
+
+    .card {
+      border: 0px solid red;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body style="border:0px solid #ccc;padding:0px;position: absolute;overflow: auto; width:100%;height: 100%; ">
+  <!-- NAV BAR -->
+  <header class="mdc-top-app-bar" style="background:#018786;max-width: 100% !important;padding:0px !important;">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        <span class="mdc-top-app-bar__title">My SnipperCodeTX</span>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+        <button onclick="javascript:window.location.reload()"
+          class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded" aria-label="Download">
+          refresh
+        </button>
+        <button class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded" aria-label="Download">
+          file_download
+        </button>
+        <button class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
+          aria-label="Print this page">
+          print
+        </button>
+        <button class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
+          aria-label="Bookmark this page" id="close-this-window">
+          close
+        </button>
+      </section>
+    </div>
+  </header>
+  <br /><br />
+  <div class="container-fluid">
+    <br />
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <div class="row">
+          <!-- CATEGORIAS -->
+          <div class="col-sm-3 col-md-3">
+            <div class="alert alert-success">
+              <button class="float-right" title="Clique para adicionar uma nova categoria" data-toggle="modal"
+                data-target="#exampleModal" id="abrir-modal-criador-categoria">
+                <i class="material-icons">
+                  add_circle_outline
+                </i>
+              </button>
+              <strong>Suas Categorias:</strong>
             </div>
-            <!-- CONTEÚDO -->
-            <div class="col-sm-8 col-md-8">
-              <div class="row">
-                <div class="col-md-12">
-                  <!-- PESQUISAR NOTAS -->
-                  <div class="input-group mb-3">
-                    <div
-                      class="input-group-prepend"
-                      style="border:0px solid red;"
-                    >
-                      <button
-                        class=""
-                        style="border:0px solid lime;height: 50%;margin-top:40%;"
-                      >
-                        <i class="material-icons">
-                          search
-                        </i>
-                      </button>
-                    </div>
-                    <input
-                      type="search"
-                      class="form-control"
-                      placeholder="Pesquisar por nome, descrição ou linguagem"
-                      autofocus
-                    />
-                    <button
-                      class="mdc-fab mdc-fab--extended"
-                      data-toggle="modal"
-                      data-target="#modalCriarNota"
-                    >
-                      <span class="material-icons mdc-fab__icon">add</span>
-                      <span class="mdc-fab__label">Criar nova nota</span>
+            <div class="input-group mb-3">
+              <input type="search" class="form-control" id="categoria"
+                placeholder="Pesquisar por nome, descrição ou linguagem" autofocus />
+            </div>
+            <ul class="list-group" id="category">
+              <li class="list-group-item list-group-item-action">
+                Carregando categorias...
+              </li>
+            </ul>
+          </div>
+          <!-- CONTEÚDO -->
+          <div class="col-sm-9 col-md-9">
+            <div class="row">
+              <div class="col-md-12">
+                <!-- PESQUISAR NOTAS -->
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend" style="border:0px solid red;">
+                    <button class="" style="border:0px solid lime;height: 50%;margin-top:40%;">
+                      <i class="material-icons">
+                        search
+                      </i>
                     </button>
                   </div>
+                  <input type="search" class="form-control" placeholder="Pesquisar por nome, descrição ou linguagem"
+                    autofocus />
+                  <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
+                    <span class="material-icons mdc-fab__icon">add</span>
+                    <span class="mdc-fab__label">Criar nova nota</span>
+                  </button>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <!-- <span data-toggle=snackbar data-content="This is my awesome snackbar!"></span> -->
-                  <div
-                    id="get-notes"
-                    style="border:0px solid red;overflow: auto;max-height: 670px;padding-left:20px;padding-right: 20px;"
-                  >
-                    <div
-                      style="display: flex;
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <!-- <span data-toggle=snackbar data-content="This is my awesome snackbar!"></span> -->
+                <div id="get-notes"
+                  style="border:0px solid red;overflow: auto;max-height: 670px;padding-left:20px;padding-right: 20px;">
+                  <div style="display: flex;
           height: 400px;
           text-align: center;
           flex-direction: column;
           justify-content: center;
           align-content: center;
-          align-items: center;"
-                    >
-                      <h3>Hey!</h3>
-                      <h4>Você não tem nenhuma nota.</h4>
-                      <button
-                        class="mdc-fab mdc-fab--extended"
-                        data-toggle="modal"
-                        data-target="#modalCriarNota"
-                      >
-                        <span class="material-icons mdc-fab__icon">add</span>
-                        <span class="mdc-fab__label">Criar nova nota :)</span>
-                      </button>
-                    </div>
+          align-items: center;">
+                    <h3>Hey!</h3>
+                    <h4>Você não tem nenhuma nota.</h4>
+                    <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
+                      <span class="material-icons mdc-fab__icon">add</span>
+                      <span class="mdc-fab__label">Criar nova nota :)</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -190,233 +129,274 @@
         </div>
       </div>
     </div>
-    <script>
-      setTimeout(() => {
-        // console.clear();
-      }, 100);
-      const sqlite = require("sqlite-sync"); //requiring
-      const $ = require("jQuery");
-      const db = require("../src/conexao.js");
+  </div>
+  <script>
+    setTimeout(() => {
+      // console.clear();
+    }, 100);
+    const sqlite = require("sqlite-sync"); //requiring
+    const $ = require("jQuery");
+    const db = require("../src/conexao.js");
 
-      const {
-        notas,
-        modalCategory,
-        modalCriarNota,
-      } = require("../src/components/framework.js");
+    const {
+      notas,
+      modalCategory,
+      modalCriarNota,
+      ModalEditarNota
+    } = require("../src/components/framework.js");
 
-      const { remote, clipboard } = require("electron");
+    const { remote, clipboard } = require("electron");
 
-      //console.log(remote.app.getPath('userData'));
+    //console.log(remote.app.getPath('userData'));
 
-      sqlite.connect("./src/db/notes_db.db");
+    sqlite.connect("./src/db/notes_db.db");
 
-      sqlite.close();
+    sqlite.close();
 
-      // Pode usar o jQuery normalmente agora.
-      $(document).ready(function() {
-        //Abre o modal de categorias:
-        $("#abrir-modal-criador-categoria").click(function() {
-          setTimeout(function() {
-            $("#category-name")
-              .focus()
-              .select();
-          }, 500);
-        });
+    // Pode usar o jQuery normalmente agora.
+    $(document).ready(function () {
+      //Abre o modal de categorias:
+      $("#abrir-modal-criador-categoria").click(function () {
+        setTimeout(function () {
+          $("#category-name")
+            .focus()
+            .select();
+        }, 500);
+      });
 
-        /**
-         * Adiciona os modais:
-         * */
+
+      /**
+      Pesquisar Categorias:
+      */
+      $("#categoria").keyup(function () {
+
+        let _value = $(this);
+
+        _value = _value.val();
+
+        let categories = document.getElementById("category").childNodes
+
+        for (let k = 0; k < categories.length; k++) {
+
+          if (categories[k].title.toLowerCase().includes(_value.toLowerCase())) {
+            $(categories[k]).removeAttr("hidden").show();
+          }
+          else {
+            $(categories[k]).removeClass('d-flex').attr('hidden', true).hide();
+          }
+        }
+
+      })
+      /**
+       * Adiciona os modais:
+       * */
+      setTimeout(function () {
+
         $("body").append(
           modalCategory("Criar nova categoria", "exampleModal", "idButton1"),
-          modalCriarNota("Criar nova nota", "modalCriarNota", "buttonCriarNota")
+          modalCriarNota("Criar nova nota", "modalCriarNota", "buttonCriarNota"),
+          ModalEditarNota("Editar Nota", "modalEditarNota", "btnAlterarNota")
         );
 
-        $("#idButton1").click(function() {
-          let categoryName = $("#category-name")
-            .val()
-            .trim();
-          if (categoryName != "") {
-            let sql = "INSERT INTO category(category_name) VALUES (?)";
+        $('#exampleModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          console.log(button);
+        })
 
-            db.run(sql, [categoryName], function(err) {
-              if (err) {
-                return console.error(err.message);
-              }
+      }, 1000);
 
-              let lastId = this.lastID;
 
-              if (this.changes > 0) {
-                alert("Categoria criada com sucesso!");
-                var languages = document.getElementsByName("languages");
-                $(languages).append(
-                  `<option value='${lastId}'>${categoryName}</option>`
-                );
-              }
-            });
-          }
-        });
+      $("#idButton1").click(function () {
+        let categoryName = $("#category-name")
+          .val()
+          .trim();
+        if (categoryName != "") {
+          let sql = "INSERT INTO category(category_name) VALUES (?)";
 
-        $("#formSave").submit(function(ev) {
-
-          ev.preventDefault();
-          let title = this.elements.title.value;
-          let description = this.elements.description.value;
-          let tags = this.elements.tags.value;
-          let code = this.elements.code.value;
-          var languages = document.getElementsByName("languages");
-          var language = $(languages).val();
-
-          let sql = `INSERT INTO notes(note_title,note_description,note_code,
-          note_category_id,note_type_language) VALUES (?,?,?,?,?);`;
-
-          db.run(
-            sql,
-            [title, description, code, language, $(languages).text()],
-            function(err) {
-              if (err) {
-                return console.error(err.message);
-              }
-              console.log(this);
-              if (this.changes > 0) {
-                alert("Nota criada com sucesso!");
-                carregarCategorias();
-              }
+          db.run(sql, [categoryName], function (err) {
+            if (err) {
+              return console.error(err.message);
             }
-          );
 
-          return false;
-        });
-        /**
-         * Função para Buscar notas por categoria_id
-         * */
-        function getNotesByCategoryId(category_id) {
-          sqlite.connect("./src/db/notes_db.db");
+            let lastId = this.lastID;
 
-          let rows = sqlite.run(
-            "SELECT * FROM notes WHERE note_category_id = ?",
-            [category_id]
-          );
-
-          sqlite.close();
-
-          return rows;
-        }
-
-        var options = {
-          content: "Some text", // text of the snackbar
-          style: "toast", // add a custom class to your snackbar
-          timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
-        };
-
-        $.snackbar(options);
-
-        function carregarCategorias() {
-          db.serialize(() => {
-            var rows = document.getElementById("category");
-
-            rows.innerHTML = "";
-
-            db.each(
-              `SELECT note_category_id, category_id, category_name, COUNT(*) as count FROM notes as t1
-      JOIN category as t2 ON t2.category_id = t1.note_category_id
-      GROUP BY note_category_id`,
-              (err, row) => {
-                if (err) {
-                  console.error(err.message);
-                }
-
-                var item = document.createElement("li");
-
-                item.onclick = function() {
-                  let rows = getNotesByCategoryId(row.category_id);
-
-                  let content = "";
-
-                  if (Object.keys(rows).length > 0) {
-                    for (let data of rows) {
-                      content += notas(data);
-                    }
-                  }
-
-                  $("#get-notes").html(content);
-
-                  //Ao clicar no botão de copiar
-                  $(".copiar").each(function(index, element) {
-                    
-                    $(this).click(function(ev) {
-
-                      let note_id = $(this).attr("data-id");
-
-                      clipboard.writeText($(`#note_${note_id}`).text());
-
-                      var options = {
-                        content: "Código copiado com sucesso!", // text of the snackbar
-                        style: "toast", // add a custom class to your snackbar
-                        timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
-                      };
-
-                      $.snackbar(options);
-                    });
-                  });
-
-                  // hljs.initHighlighting.called = false;
-                  // hljs.initHighlighting();
-                  $("pre code").each(function(i, e) {
-                    hljs.highlightBlock(e);
-                  });
-                  return false;
-                };
-
-                $(item)
-                  .addClass(
-                    "list-group-item d-flex justify-content-between align-items-center"
-                  )
-                  .html(
-                    row.category_name.toUpperCase() +
-                      ` <span class='badge badge-primary badge-pill'>${row.count}</span>`
-                  )
-                  .attr("data-category", JSON.stringify(row))
-                  .attr("title", row.category_name.toUpperCase());
-
-                rows.appendChild(item);
-              }
-            );
+            if (this.changes > 0) {
+              alert("Categoria criada com sucesso!");
+              var languages = document.getElementsByName("languages");
+              $(languages).append(
+                `<option value='${lastId}'>${categoryName}</option>`
+              );
+            }
           });
         }
+      });
 
-        carregarCategorias();
-      }); //Fim: $(document).ready
+      $("#formSave").submit(function (ev) {
 
-      //Fecha a janela do windows:
-      const close = e => {
-        const window = remote.getCurrentWindow();
-        window.close();
+        ev.preventDefault();
+
+        let title = this.elements.title.value;
+        let description = this.elements.description.value;
+        let tags = this.elements.tags.value;
+        let code = this.elements.code.value;
+        let languages = document.getElementsByName("languages");
+        let language = $(languages).val();
+
+        let sql = `INSERT INTO notes(note_title,note_description,note_code,
+          note_category_id,note_type_language) VALUES (?,?,?,?,?);`;
+
+        db.run(sql, [title, description, code, language, $(languages).text()],
+          function (err) {
+            if (err) {
+              return console.error(err.message);
+            }
+            if (this.changes > 0) {
+              alert("Nota criada com sucesso!");
+              carregarCategorias();
+            }
+          }
+        );
+
+        return false;
+      });
+      /**
+       * Função para Buscar notas por categoria_id
+       * */
+      function getNotesByCategoryId(category_id) {
+        sqlite.connect("./src/db/notes_db.db");
+
+        let rows = sqlite.run(
+          "SELECT * FROM notes WHERE note_category_id = ?",
+          [category_id]
+        );
+
+        sqlite.close();
+
+        return rows;
+      }
+
+      var options = {
+        content: "Some text", // text of the snackbar
+        style: "toast", // add a custom class to your snackbar
+        timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
       };
 
-      document
-        .querySelector("#close-this-window")
-        .addEventListener("click", close);
+      $.snackbar(options);
+
+      function carregarCategorias() {
+        db.serialize(() => {
+          var rows = document.getElementById("category");
+
+          rows.innerHTML = "";
+
+          db.each(
+            `SELECT note_category_id, category_id, category_name, COUNT(*) as count FROM notes as t1
+      JOIN category as t2 ON t2.category_id = t1.note_category_id
+      GROUP BY note_category_id`,
+            (err, row) => {
+              if (err) {
+                console.error(err.message);
+              }
+
+              var item = document.createElement("li");
+
+              item.onclick = function () {
+
+                let rows = getNotesByCategoryId(row.category_id);
+
+                let content = "";
+
+                if (Object.keys(rows).length > 0) {
+                  for (let data of rows) {
+                    content += notas(data);
+                  }
+                }
+
+                $("#get-notes").html(content);
+
+                //Abrir o modal
+                $('.editar-nota').click(function () {
+
+                  var nota = JSON.parse($(this).attr('data-nota'));
+
+                  $('#modalEditarNota').modal("show");
+                                    
+                  $('#nota-id').val(nota.note_id);
+                });
+
+                //Ao clicar no botão de copiar
+                $(".copiar").each(function (index, element) {
+
+                  $(this).click(function (ev) {
+
+                    let note_id = $(this).attr("data-id");
+
+                    clipboard.writeText($(`#note_${note_id}`).text());
+
+                    var options = {
+                      content: "Código copiado com sucesso!", // text of the snackbar
+                      style: "toast", // add a custom class to your snackbar
+                      timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
+                    };
+
+                    $.snackbar(options);
+
+                  });
+                });
+
+                // hljs.initHighlighting.called = false;
+                // hljs.initHighlighting();
+                $("pre code").each(function (i, e) {
+                  hljs.highlightBlock(e);
+                });
+                return false;
+              };
+
+              $(item)
+                .addClass(
+                  "list-group-item d-flex justify-content-between align-items-center"
+                )
+                .html(
+                  row.category_name.toUpperCase() +
+                  ` <span class='badge badge-primary badge-pill'>${row.count}</span>`
+                )
+                .attr("data-category", JSON.stringify(row))
+                .attr("title", row.category_name.toUpperCase());
+
+              rows.appendChild(item);
+            }
+          );
+        });
+      }
+
+      carregarCategorias();
+    }); //Fim: $(document).ready
+
+    //Fecha a janela do windows:
+    const close = e => {
+      const window = remote.getCurrentWindow();
+      window.close();
+    };
+
+    document
+      .querySelector("#close-this-window")
+      .addEventListener("click", close);
 
       //require('bootstrap-material-design');
-    </script>
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
-      integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdn.rawgit.com/FezVrasta/snackbarjs/1.1.0/dist/snackbar.min.js"></script>
-    <script
-      src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
-      integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      $("body").bootstrapMaterialDesign();
-    </script>
-  </body>
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+    integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.rawgit.com/FezVrasta/snackbarjs/1.1.0/dist/snackbar.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+    integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+    crossorigin="anonymous"></script>
+  <script>
+    $("body").bootstrapMaterialDesign();
+  </script>
+</body>
+
 </html>
