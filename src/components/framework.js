@@ -1,8 +1,4 @@
 ﻿`use strict`;
-// const marked = require("marked");
-// const hljs = require("highlight.js");
-// const remote = require("electron").remote;
-// const db = require('../../src/conexao.js');
 
 function escapeHtml(unsafe) {
   return unsafe
@@ -12,6 +8,16 @@ function escapeHtml(unsafe) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+exports.escapeHtml = function(unsafe){
+  return unsafe
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#039;"); 
+}
+
 /**
  * Mostra as notas
  */
@@ -22,10 +28,10 @@ exports.notas = function (notas) {
   let edicao = {
     note_id: note_id,
     note_title: note_title,
-    note_code:note_code,
     note_description: note_description,
     note_type_language: note_type_language
   };
+
   let content = `
     <div class="card mb-10">
     <div class="card-header">
@@ -177,15 +183,15 @@ exports.ModalEditarNota = function (titulo, idModal) {
         <input type="text" id="nota-id" value="aaa"/>
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Título:</strong></label>
-          <input type="text" name="title" class="form-control" required>
+          <input type="text" id="gd-title" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Descrição:</strong></label>
-          <input type="text" name="description" class="form-control" required>
+          <input type="text"  id="gd-description" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
-          <input type="text" name="tags" class="form-control" required>
+          <input type="text" id="gd-tags" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="message-text" class="col-form-label"><strong>Linguagem:</strong></label>
@@ -199,6 +205,7 @@ exports.ModalEditarNota = function (titulo, idModal) {
   content += `</select>
         </div>
         <div class="form-group">
+        <pre><code id="gd-get-note"></code></pre>
           <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
           <textarea class="form-control" name="code" id="code"></textarea>
         </div>
@@ -213,6 +220,7 @@ exports.ModalEditarNota = function (titulo, idModal) {
     </div>
   </div>
 </div>
-</div>`;
+</div>
+`;
   return content;
 };

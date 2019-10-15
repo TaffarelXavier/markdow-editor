@@ -142,7 +142,8 @@
       notas,
       modalCategory,
       modalCriarNota,
-      ModalEditarNota
+      ModalEditarNota,
+      escapeHtml
     } = require("../src/components/framework.js");
 
     const { remote, clipboard } = require("electron");
@@ -320,8 +321,20 @@
                   var nota = JSON.parse($(this).attr('data-nota'));
 
                   $('#modalEditarNota').modal("show");
-                                    
+
+                  $('#gd-title').val(nota.note_title);
+
+                  $('#gd-description').val(nota.note_description);
+
+                  $('#gd-tags').val(nota.note_tags);
+
+                  $("#gd-get-note").html(escapeHtml($(`#note_${nota.note_id}`).text())).addClass(nota.note_type_language);
+
                   $('#nota-id').val(nota.note_id);
+                  
+                  $("pre code").each(function (i, e) {
+                    hljs.highlightBlock(e);
+                  });
                 });
 
                 //Ao clicar no botão de copiar
