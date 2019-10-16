@@ -39,14 +39,19 @@ exports.notas = function (notas) {
     </div>
     <div class="card-body text-secondary">
       <p class="card-title">${note_description}</p>
-      <i class="material-icons copiar" data-id="${note_id}" id="copiar_${note_id}" title="Clique para copiar">file_copy</i>
-      <i class="material-icons">
-        refresh
-      </i>
-      <i class="material-icons excluir-nota" data-nota-id="${note_id}">
+
+      <i class="material-icons copiar" data-id="${note_id}"
+      title="Copiar código"
+      id="copiar_${note_id}" title="Clique para copiar">file_copy</i>
+
+      <i class="material-icons excluir-nota"
+      title="Excluir nota"
+      data-nota-id="${note_id}">
         delete
       </i>
-      <i class="material-icons editar-nota"  data-nota='${JSON.stringify(edicao)}'>
+      <i class="material-icons editar-nota" 
+      title="Editar Nota"
+      data-nota='${JSON.stringify(edicao)}'>
         edit
       </i>
       <pre><code contenteditable class="${note_type_language}" id="note_${note_id}">${escapeHtml(note_code)}</code></pre>
@@ -120,7 +125,7 @@ exports.modalCriarNota = function (titulo, idModal, idButton) {
   sqlite.close();
   let content = `<!-- Modal Criar Categoria -->
 <div class="modal fade bd-example-modal-lg" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document"><!--modal-lg-->
+<div class="modal-dialog modal-lg" role="document"><!--modal-lg-->
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel"><strong>${titulo}</strong></h5>
@@ -164,7 +169,7 @@ exports.modalCriarNota = function (titulo, idModal, idButton) {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-      <button type="submit" form="formSave" class="btn btn-primary" id="salvarNota">Salvar nova nota</button>
+      <button type="submit" form="formSave" class="mdc-fab mdc-fab--extended" id="salvarNota">Salvar nova nota</button>
     </div>
   </div>
 </div>
@@ -184,9 +189,9 @@ exports.ModalEditarNota = function (titulo, idModal) {
 
   sqlite.close();
 
-  let content = `<!-- Modal Criar Categoria -->
-<div class="modal fade bd-example-modal-lg" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document"><!--modal-lg-->
+  let content = `
+<div class="modal fade" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document"><!--modal-lg-->
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel"><strong>${titulo}</strong></h5>
@@ -232,7 +237,7 @@ exports.ModalEditarNota = function (titulo, idModal) {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-      <button type="submit" form="formSave" class="btn btn-primary" id="salvarNota">Salvar nova nota</button>
+      <button type="submit" form="formSave" class="mdc-fab mdc-fab--extended" id="salvarNota">Salvar nova nota</button>
     </div>
   </div>
 </div>

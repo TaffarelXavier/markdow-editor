@@ -8,14 +8,12 @@ const {
   modalCriarNota,
   ModalEditarNota,
   escapeHtml,
-  modalExcluirNota
+  modalExcluirNota,
 } = require("../src/components/framework.js");
 
-const { remote, clipboard, webFrame    } = require("electron");
+const { remote, clipboard, webFrame } = require("electron");
 
-
-setTimeout(() => {
-}, 1000);
+setTimeout(() => {}, 1000);
 
 //console.log(remote.app.getPath('userData'));
 
@@ -140,8 +138,8 @@ $(document).ready(function() {
   function getNotesByCategoryId(category_id) {
     sqlite.connect("./src/db/notes_db.db");
 
-    let rows = sqlite.run("SELECT * FROM notes WHERE note_category_id = ?;", [
-      category_id
+    let rows = sqlite.run("SELECT * FROM notes WHERE note_category_id = ? ;", [
+      category_id,
     ]);
 
     sqlite.close();
@@ -152,14 +150,14 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
 
-
   function carregarCategorias() {
     db.serialize(() => {
+
       var rows = document.getElementById("category");
 
       rows.innerHTML = "";
@@ -192,20 +190,33 @@ $(document).ready(function() {
             $(".excluir-nota").click(function() {
               let note_id = parseInt($(this).attr("data-nota-id"));
 
-              if (confirm("Deseja realmente excluir esta nota?")) {
-                $(`#note_card_${note_id}`).remove();
-                // delete a row based on id
-                db.run(`DELETE FROM notes WHERE note_id = ?`, note_id, function(
-                  err
-                ) {
-                  if (err) {
-                    alert(JSON.stringify(err.message));
-                    return false;
-                  }
-                  console.log(`Row(s) deleted ${this.changes}`);
-                  carregarCategorias();
-                });
-              }
+              let options = {
+                type: "question",
+                buttons: ["Não", "Sim"],
+                title: "Deseja realmente excluir esta nota?",
+                message: "Changes you made may not be saved.",
+                defaultId: 0,
+                cancelId: 1,
+              };
+              remote.dialog.showMessageBox(options, response => {
+      
+                if (response === 1) {
+                  $(`#note_card_${note_id}`).remove();
+                  // delete a row based on id
+                  db.run(
+                    `DELETE FROM notes WHERE note_id = ?`,
+                    note_id,
+                    function(err) {
+                      if (err) {
+                        alert(JSON.stringify(err.message));
+                        return false;
+                      }
+                      console.log(`Row(s) deleted ${this.changes}`);
+                      carregarCategorias();
+                    }
+                  );
+                }
+              });
             });
 
             //Editar Nota
@@ -233,6 +244,7 @@ $(document).ready(function() {
 
             //Para copiar uma nota:
             $(".copiar").each(function(index, element) {
+
               $(this).click(function(ev) {
                 let note_id = $(this).attr("data-id");
 
@@ -241,7 +253,7 @@ $(document).ready(function() {
                 var options = {
                   content: "Código copiado com sucesso!", // text of the snackbar
                   style: "toast", // add a custom class to your snackbar
-                  timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
+                  timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
                 };
 
                 $.snackbar(options);
