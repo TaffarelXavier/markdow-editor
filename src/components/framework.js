@@ -33,41 +33,34 @@ exports.notas = function (notas) {
   };
 
   let content = `
-    <div class="card mb-10">
-    <div class="card-header">
-      <h5 class="card-title float-left"><strong><b>${note_title}</b></strong></h5>
-      <button class="float-right">
-        <i class="material-icons">
-          refresh
-        </i>
-      </button>
-      <button class="float-right">
-        <i class="material-icons">
-          delete
-        </i>
-      </button>
-      <button class="float-right editar-nota" data-nota='${JSON.stringify(edicao)}'>
-        <i class="material-icons">
-          edit
-        </i>
-      </button>
+    <div id="note_card_${note_id}"><div class="card mb-10">
+    <div class="card-header" style="border-bottom:1px solid rgba(0,0,0,0.1);padding-top:0;padding-bottom:0;">
+      <a class="card-title" style="font-size:20px;"><strong><b>${note_title}</b></strong></a>
     </div>
     <div class="card-body text-secondary">
       <p class="card-title">${note_description}</p>
       <i class="material-icons copiar" data-id="${note_id}" id="copiar_${note_id}" title="Clique para copiar">file_copy</i>
-      <pre><code class="${note_type_language}" id="note_${note_id}">${escapeHtml(note_code)}</code></pre>
+      <i class="material-icons">
+        refresh
+      </i>
+      <i class="material-icons excluir-nota" data-nota-id="${note_id}">
+        delete
+      </i>
+      <i class="material-icons editar-nota"  data-nota='${JSON.stringify(edicao)}'>
+        edit
+      </i>
+      <pre><code contenteditable class="${note_type_language}" id="note_${note_id}">${escapeHtml(note_code)}</code></pre>
     </div>
   </div>
-  <div class="dropdown-divider"></div>`;
+  <div class="dropdown-divider"></div></div>`;
   return content;
 };
 
 /**
- *Criar categoria
+ *Criar categoria <!-- Modal Criar Categoria -->
  */
 exports.modalCategory = function (titulo, idModal, idButton) {
   return `
-<!-- Modal Criar Categoria -->
   <div class="modal fade" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -93,6 +86,29 @@ exports.modalCategory = function (titulo, idModal, idButton) {
       </div>
     </div>
   </div>`;
+};
+
+exports.modalExcluirNota = function (titulo, idModal, idButton) {
+  return `
+  <div class="modal" tabindex="-1" role="dialog" id="modallll">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Excluir Nota</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>`;
 };
 
 /**
@@ -205,7 +221,7 @@ exports.ModalEditarNota = function (titulo, idModal) {
   content += `</select>
         </div>
         <div class="form-group">
-        <pre><code id="gd-get-note"></code></pre>
+        <pre><code id="gd-get-note" contenteditable></code></pre>
           <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
           <textarea class="form-control" name="code" id="code"></textarea>
         </div>
