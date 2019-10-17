@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>Some text <b>and more text</b> and more</div>
+    
+    <script>
+      document.onmouseup = function() {
+        var sel = getSelectionTextAndContainerElement();
+
+        let language = prompt("Digite o nome da linguagem");
+
+        while (language === null) {
+          language = prompt("Digite o nome da linguagem");
+        }
+        sel.containerElement.innerText = `\`\`\`${language}
+        ${sel.text}
+        \`\`\``;
+      };
+
+      function getSelectionTextAndContainerElement() {
+        var text = "",
+          containerElement = null;
+
+        if (typeof window.getSelection != "undefined") {
+          var sel = window.getSelection();
+          if (sel.rangeCount) {
+            var node = sel.getRangeAt(0).commonAncestorContainer;
+            containerElement = node.nodeType == 1 ? node : node.parentNode;
+            text = sel.toString();
+          }
+        } else if (
+          typeof document.selection != "undefined" &&
+          document.selection.type != "Control"
+        ) {
+          var textRange = document.selection.createRange();
+          containerElement = textRange.parentElement();
+          text = textRange.text;
+        }
+        return {
+          text: text,
+          containerElement: containerElement,
+        };
+      }
+    </script>
+  </body>
+</html>

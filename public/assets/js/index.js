@@ -1,25 +1,16 @@
 const sqlite = require("sqlite-sync"); //requiring
 const $ = require("jQuery");
 const db = require("../src/conexao.js");
-
 const {
   notas,
   modalCategory,
   modalCriarNota,
   ModalEditarNota,
   escapeHtml,
-  modalExcluirNota
+  modalExcluirNota,
 } = require("../src/components/framework.js");
-
-const { remote, clipboard, webFrame } = require("electron");
-
-setTimeout(() => {}, 1000);
-
-//console.log(remote.app.getPath('userData'));
-
-// sqlite.connect("./src/db/notes_db.db");
-
-// sqlite.close();
+const { remote, clipboard} = require("electron");
+const win = remote.getCurrentWindow();
 
 // Pode usar o jQuery normalmente agora.
 $(document).ready(function() {
@@ -37,6 +28,7 @@ $(document).ready(function() {
     Pesquisar Categorias:
     */
   $("#categoria").keyup(function() {
+
     let _value = $(this);
 
     _value = _value.val();
@@ -145,10 +137,12 @@ $(document).ready(function() {
    * Função para Buscar notas por categoria_id
    * */
   function getNotesByCategoryId(category_id) {
+    
     sqlite.connect("./src/db/notes_db.db");
 
-    let rows = sqlite.run("SELECT * FROM notes WHERE note_category_id = ? ;", [
-      category_id
+    let rows = sqlite.run(`SELECT * FROM notes AS t1 JOIN languages AS t2
+    ON t1.note_type_language = t2.lang_id WHERE note_category_id = ? ;`, [
+      category_id,
     ]);
 
     sqlite.close();
@@ -159,7 +153,7 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
@@ -182,6 +176,7 @@ $(document).ready(function() {
           var item = document.createElement("li");
 
           item.onclick = function() {
+            //Busca as categorias
             let rows = getNotesByCategoryId(row.category_id);
 
             let content = "";
@@ -197,17 +192,19 @@ $(document).ready(function() {
             //Exluir nota:
             $(".excluir-nota").click(function() {
               let note_id = parseInt($(this).attr("data-nota-id"));
-
+              
               let options = {
                 type: "question",
                 buttons: ["Não", "Sim"],
                 title: "Deseja realmente excluir esta nota?",
                 message: "Esta operação não poderá ser revertida.",
+                detail: "Algum detalhe aqui",
                 defaultId: 0,
-                cancelId: 1
+                cancelId: -1,
               };
-              remote.dialog.showMessageBox(options, response => {
-                if (response === 1) {
+
+              remote.dialog.showMessageBox(win, options, response => {
+                if (response == 1) {
                   $(`#note_card_${note_id}`).remove();
                   // delete a row based on id
                   db.run(
@@ -224,10 +221,12 @@ $(document).ready(function() {
                   );
                 }
               });
+            
             });
 
             //Editar Nota
             $(".editar-nota").click(function() {
+
               var nota = JSON.parse($(this).attr("data-nota"));
 
               $("#modalEditarNota").modal("show");
@@ -259,7 +258,7 @@ $(document).ready(function() {
                 var options = {
                   content: "Código copiado com sucesso!", // text of the snackbar
                   style: "toast", // add a custom class to your snackbar
-                  timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
+                  timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
                 };
 
                 $.snackbar(options);

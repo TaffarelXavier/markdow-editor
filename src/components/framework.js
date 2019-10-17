@@ -27,14 +27,14 @@ exports.notas = function(notas) {
     note_title,
     note_description,
     note_code,
-    note_type_language
+    lang_name
   } = notas;
 
   let edicao = {
     note_id: note_id,
     note_title: note_title,
     note_description: note_description,
-    note_type_language: note_type_language
+    lang_name: lang_name
   };
 
   let content = `<div id="note_card_${note_id}"><div class="card mb-10">
@@ -56,7 +56,7 @@ exports.notas = function(notas) {
       data-nota='${JSON.stringify(edicao)}'>
         edit
       </i>
-      <pre><code contenteditable class="${note_type_language}" id="note_${note_id}">${escapeHtml(
+      <pre><code contenteditable class="${lang_name}" id="note_${note_id}">${escapeHtml(
     note_code
   )}</code></pre>
     </div>
@@ -156,19 +156,23 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
           <!--COLUNA 1-->
           <div class="col-sm-6 col-md-6">
           <div class="form-group">
-          <label for="message-text" class="col-form-label"><strong>Linguagem:</strong></label>
+          <label for="message-text" class="col-form-label"><strong>Categoria:</strong></label>
           <select class="custom-select mr-sm-2" name="languages">
           <option selected>Choose...</option>`;
-
   for (let data of categories) {
     content += `<option value="${data.category_id}">${data.category_name}</option>`;
   }
-
   content += `</select>
         </div>  
           </div>
           <!--COLUNA 2-->
           <div class="col-sm-6 col-md-6">
+          <label for="message-text" class="col-form-label"><strong>Linguagem para Formatação:</strong></label>
+          <select class="custom-select mr-sm-2" name="formatacao-language">`;
+          for (let data of categories) {
+            content += `<option value="${data.category_id}">${data.category_name}</option>`;
+          }
+          `</select>
           </div>
         </div>
         
