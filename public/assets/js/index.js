@@ -8,7 +8,7 @@ const {
   modalCriarNota,
   ModalEditarNota,
   escapeHtml,
-  modalExcluirNota,
+  modalExcluirNota
 } = require("../src/components/framework.js");
 
 const { remote, clipboard, webFrame } = require("electron");
@@ -25,6 +25,7 @@ setTimeout(() => {}, 1000);
 $(document).ready(function() {
   //Abre o modal de categorias:
   $("#abrir-modal-criador-categoria").click(function() {
+    alert("A");
     setTimeout(function() {
       $("#category-name")
         .focus()
@@ -73,10 +74,16 @@ $(document).ready(function() {
   });
 
   //Evento ao abrir o modal:
-  $("#exampleModal").on("show.bs.modal", function(event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    console.log(button);
+  $("#modalCriarNota").on("show.bs.modal", function(event) {
+    setTimeout(() => {
+      $("#note-title")
+        .focus()
+        .select()
+        .val("");
+    }, 500);
   });
+
+  $("#exampleModal").on("show.bs.modal", function(event) {});
 
   $("#idButton1").click(function() {
     let categoryName = $("#category-name")
@@ -110,15 +117,18 @@ $(document).ready(function() {
     let description = this.elements.description.value;
     let tags = this.elements.tags.value;
     let code = this.elements.code.value;
+
     let languages = document.getElementsByName("languages");
     let language = $(languages).val();
 
+    let data = this.elements.languages[this.elements.languages.selectedIndex];
+
     let sql = `INSERT INTO notes(note_title, note_description, note_code,
-        note_category_id,note_type_language) VALUES (?,?,?,?,?);`;
+        note_category_id, note_type_language, created_at) VALUES (?,?,?,?,?,?);`;
 
     db.run(
       sql,
-      [title, description, code, language, $(languages).text()],
+      [title, description, code, data.value, data.label, Date.now()],
       function(err) {
         if (err) {
           return console.error(err.message);
@@ -129,7 +139,6 @@ $(document).ready(function() {
         }
       }
     );
-
     return false;
   });
   /**
@@ -139,7 +148,7 @@ $(document).ready(function() {
     sqlite.connect("./src/db/notes_db.db");
 
     let rows = sqlite.run("SELECT * FROM notes WHERE note_category_id = ? ;", [
-      category_id,
+      category_id
     ]);
 
     sqlite.close();
@@ -150,14 +159,13 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
 
   function carregarCategorias() {
     db.serialize(() => {
-
       var rows = document.getElementById("category");
 
       rows.innerHTML = "";
@@ -194,12 +202,11 @@ $(document).ready(function() {
                 type: "question",
                 buttons: ["Não", "Sim"],
                 title: "Deseja realmente excluir esta nota?",
-                message: "Changes you made may not be saved.",
+                message: "Esta operação não poderá ser revertida.",
                 defaultId: 0,
-                cancelId: 1,
+                cancelId: 1
               };
               remote.dialog.showMessageBox(options, response => {
-      
                 if (response === 1) {
                   $(`#note_card_${note_id}`).remove();
                   // delete a row based on id
@@ -244,7 +251,6 @@ $(document).ready(function() {
 
             //Para copiar uma nota:
             $(".copiar").each(function(index, element) {
-
               $(this).click(function(ev) {
                 let note_id = $(this).attr("data-id");
 
@@ -253,7 +259,7 @@ $(document).ready(function() {
                 var options = {
                   content: "Código copiado com sucesso!", // text of the snackbar
                   style: "toast", // add a custom class to your snackbar
-                  timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
+                  timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
                 };
 
                 $.snackbar(options);

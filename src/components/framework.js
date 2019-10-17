@@ -9,21 +9,26 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
-exports.escapeHtml = function(unsafe){
+exports.escapeHtml = function(unsafe) {
   return unsafe
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;")
-  .replace(/'/g, "&#039;"); 
-}
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
 
 /**
  * Mostra as notas
  */
-exports.notas = function (notas) {
-
-  let { note_id, note_title, note_description, note_code, note_type_language } = notas;
+exports.notas = function(notas) {
+  let {
+    note_id,
+    note_title,
+    note_description,
+    note_code,
+    note_type_language
+  } = notas;
 
   let edicao = {
     note_id: note_id,
@@ -32,18 +37,15 @@ exports.notas = function (notas) {
     note_type_language: note_type_language
   };
 
-  let content = `
-    <div id="note_card_${note_id}"><div class="card mb-10">
-    <div class="card-header" style="border-bottom:1px solid rgba(0,0,0,0.1);padding-top:0;padding-bottom:0;">
+  let content = `<div id="note_card_${note_id}"><div class="card mb-10">
+    <div class="card-header" style="border-bottom:1px solid rgba(0,0,0,0.1);padding-top:15px;padding-bottom:15px;">
       <a class="card-title" style="font-size:20px;"><strong><b>${note_title}</b></strong></a>
     </div>
     <div class="card-body text-secondary">
-      <p class="card-title">${note_description}</p>
-
+      <p class="card-title" style="padding-top:5px;padding-bottom:5px;">${note_description}</p>
       <i class="material-icons copiar" data-id="${note_id}"
       title="Copiar código"
       id="copiar_${note_id}" title="Clique para copiar">file_copy</i>
-
       <i class="material-icons excluir-nota"
       title="Excluir nota"
       data-nota-id="${note_id}">
@@ -54,7 +56,9 @@ exports.notas = function (notas) {
       data-nota='${JSON.stringify(edicao)}'>
         edit
       </i>
-      <pre><code contenteditable class="${note_type_language}" id="note_${note_id}">${escapeHtml(note_code)}</code></pre>
+      <pre><code contenteditable class="${note_type_language}" id="note_${note_id}">${escapeHtml(
+    note_code
+  )}</code></pre>
     </div>
   </div>
   <div class="dropdown-divider"></div></div>`;
@@ -64,7 +68,7 @@ exports.notas = function (notas) {
 /**
  *Criar categoria <!-- Modal Criar Categoria -->
  */
-exports.modalCategory = function (titulo, idModal, idButton) {
+exports.modalCategory = function(titulo, idModal, idButton) {
   return `
   <div class="modal fade" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -93,7 +97,7 @@ exports.modalCategory = function (titulo, idModal, idButton) {
   </div>`;
 };
 
-exports.modalExcluirNota = function (titulo, idModal, idButton) {
+exports.modalExcluirNota = function(titulo, idModal, idButton) {
   return `
   <div class="modal" tabindex="-1" role="dialog" id="modallll">
   <div class="modal-dialog" role="document">
@@ -119,7 +123,7 @@ exports.modalExcluirNota = function (titulo, idModal, idButton) {
 /**
  * Cria uma nova nota
  */
-exports.modalCriarNota = function (titulo, idModal, idButton) {
+exports.modalCriarNota = function(titulo, idModal, idButton) {
   sqlite.connect("./src/db/notes_db.db");
   let categories = sqlite.run("SELECT * FROM category;");
   sqlite.close();
@@ -137,7 +141,7 @@ exports.modalCriarNota = function (titulo, idModal, idButton) {
       <form id="formSave">
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Título:</strong></label>
-          <input type="text" name="title" class="form-control" required>
+          <input type="text" name="title" id="note-title" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Descrição:</strong></label>
@@ -147,7 +151,11 @@ exports.modalCriarNota = function (titulo, idModal, idButton) {
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
           <input type="text" name="tags" class="form-control" required>
         </div>
-        <div class="form-group">
+
+        <div class="row">
+          <!--COLUNA 1-->
+          <div class="col-sm-6 col-md-6">
+          <div class="form-group">
           <label for="message-text" class="col-form-label"><strong>Linguagem:</strong></label>
           <select class="custom-select mr-sm-2" name="languages">
           <option selected>Choose...</option>`;
@@ -157,11 +165,19 @@ exports.modalCriarNota = function (titulo, idModal, idButton) {
   }
 
   content += `</select>
+        </div>  
+          </div>
+          <!--COLUNA 2-->
+          <div class="col-sm-6 col-md-6">
+          </div>
         </div>
+        
         <div class="form-group">
           <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
           <textarea class="form-control" name="code" id="code"></textarea>
         </div>
+
+
         <div id="get-data-mark"></div>
         <div id="get-data-not-formated"></div>
         <div class="md"></div>
@@ -181,8 +197,7 @@ exports.modalCriarNota = function (titulo, idModal, idButton) {
  * Modal Editar
  */
 
-exports.ModalEditarNota = function (titulo, idModal) {
-
+exports.ModalEditarNota = function(titulo, idModal) {
   sqlite.connect("./src/db/notes_db.db");
 
   let categories = sqlite.run("SELECT * FROM category;");
