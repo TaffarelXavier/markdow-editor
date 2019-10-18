@@ -6,11 +6,12 @@ const url = require("url");
 let win;
 
 function createWindow() {
+
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
   win = new BrowserWindow({
     width: 1200,
-    height: height - 100,
+    height: height,
     frame: true, //Definir os campos de cima
     webPreferences: {
       nodeIntegration: true,

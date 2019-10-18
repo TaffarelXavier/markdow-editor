@@ -22,13 +22,7 @@ exports.escapeHtml = function(unsafe) {
  * Mostra as notas
  */
 exports.notas = function(notas) {
-  let {
-    note_id,
-    note_title,
-    note_description,
-    note_code,
-    lang_name
-  } = notas;
+  let { note_id, note_title, note_description, note_code, lang_name } = notas;
 
   let edicao = {
     note_id: note_id,
@@ -97,35 +91,13 @@ exports.modalCategory = function(titulo, idModal, idButton) {
   </div>`;
 };
 
-exports.modalExcluirNota = function(titulo, idModal, idButton) {
-  return `
-  <div class="modal" tabindex="-1" role="dialog" id="modallll">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Excluir Nota</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>`;
-};
-
 /**
  * Cria uma nova nota
  */
 exports.modalCriarNota = function(titulo, idModal, idButton) {
   sqlite.connect("./src/db/notes_db.db");
   let categories = sqlite.run("SELECT * FROM category;");
+  let languages = sqlite.run("SELECT * FROM languages ORDER BY lang_name;");
   sqlite.close();
   let content = `<!-- Modal Criar Categoria -->
 <div class="modal fade bd-example-modal-lg" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -139,17 +111,20 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
     </div>
     <div class="modal-body">
       <form id="formSave">
+
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Título:</strong></label>
-          <input type="text" name="title" id="note-title" class="form-control" required>
+          <input type="text" name="title" placeholder="Título do snipper-code" id="note-title" class="form-control" required>
         </div>
+
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Descrição:</strong></label>
-          <input type="text" name="description" class="form-control" required>
+          <input type="text" name="description" placeholder="Descrição do snipper-code" class="form-control" required>
         </div>
+
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
-          <input type="text" name="tags" class="form-control" required>
+          <input type="text" name="tags" class="form-control" placeholder="Tags do snipper-code"  required>
         </div>
 
         <div class="row">
@@ -160,7 +135,7 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
           <select class="custom-select mr-sm-2" name="languages">
           <option selected>Choose...</option>`;
   for (let data of categories) {
-    content += `<option value="${data.category_id}">${data.category_name}</option>`;
+    content += `<option value="${data.category_id}">${data.category_name.toUpperCase()}</option>`;
   }
   content += `</select>
         </div>  
@@ -169,22 +144,23 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
           <div class="col-sm-6 col-md-6">
           <label for="message-text" class="col-form-label"><strong>Linguagem para Formatação:</strong></label>
           <select class="custom-select mr-sm-2" name="formatacao-language">`;
-          for (let data of categories) {
-            content += `<option value="${data.category_id}">${data.category_name}</option>`;
-          }
-          `</select>
+  for (let data of languages) {
+    content += `<option value="${data.lang_id}">${data.lang_name.toUpperCase()}</option>`;
+  }
+  content += `</select>
           </div>
         </div>
-        
-        <div class="form-group">
-          <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
-          <textarea class="form-control" name="code" id="code"></textarea>
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+              <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
+              <textarea class="form-control" name="code" id="code" placeholder="Digite seu snipper-code aqui" rows=5></textarea>
+            </div>
+            <div id="get-data-mark"></div>
+            <div id="get-data-not-formated"></div>
+            <div class="md"></div>
+          </div>
         </div>
-
-
-        <div id="get-data-mark"></div>
-        <div id="get-data-not-formated"></div>
-        <div class="md"></div>
       </form>
     </div>
     <div class="modal-footer">

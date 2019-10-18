@@ -6,8 +6,7 @@ const {
   modalCategory,
   modalCriarNota,
   ModalEditarNota,
-  escapeHtml,
-  modalExcluirNota,
+  escapeHtml
 } = require("../src/components/framework.js");
 const { remote, clipboard} = require("electron");
 const win = remote.getCurrentWindow();
@@ -55,8 +54,7 @@ $(document).ready(function() {
   $("body").append(
     modalCategory("Criar nova categoria", "exampleModal", "idButton1"),
     modalCriarNota("Criar nova nota", "modalCriarNota", "buttonCriarNota"),
-    ModalEditarNota("Editar Nota", "modalEditarNota", "btnAlterarNota"),
-    modalExcluirNota()
+    ModalEditarNota("Editar Nota", "modalEditarNota", "btnAlterarNota")
   );
 
   //$("#modallll").modal("show");
@@ -110,17 +108,16 @@ $(document).ready(function() {
     let tags = this.elements.tags.value;
     let code = this.elements.code.value;
 
-    let languages = document.getElementsByName("languages");
-    let language = $(languages).val();
+    let category = this.elements.languages[this.elements.languages.selectedIndex];
 
-    let data = this.elements.languages[this.elements.languages.selectedIndex];
+    let language  = this.elements['formatacao-language'][this.elements['formatacao-language'].selectedIndex]
 
     let sql = `INSERT INTO notes(note_title, note_description, note_code,
         note_category_id, note_type_language, created_at) VALUES (?,?,?,?,?,?);`;
 
     db.run(
       sql,
-      [title, description, code, data.value, data.label, Date.now()],
+      [title, description, code, category.value, language.value, Date.now()],
       function(err) {
         if (err) {
           return console.error(err.message);
@@ -160,6 +157,7 @@ $(document).ready(function() {
 
   function carregarCategorias() {
     db.serialize(() => {
+
       var rows = document.getElementById("category");
 
       rows.innerHTML = "";
@@ -176,6 +174,8 @@ $(document).ready(function() {
           var item = document.createElement("li");
 
           item.onclick = function() {
+            $('.list-group-item').removeClass("list-group-item-action list-group-item-success");
+            $(this).addClass('list-group-item-action list-group-item-success','disabled');
             //Busca as categorias
             let rows = getNotesByCategoryId(row.category_id);
 
@@ -191,6 +191,7 @@ $(document).ready(function() {
 
             //Exluir nota:
             $(".excluir-nota").click(function() {
+
               let note_id = parseInt($(this).attr("data-nota-id"));
               
               let options = {
