@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="assets/css/bootstrap-material-design.min.css" />
   <link rel="stylesheet" href="assets/css/material-components-web.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-  <link rel="stylesheet" href="assets/css/dracula.min.css" />
+  <!-- <link rel="stylesheet" href="assets/css/dracula.min.css" /> -->
   <script src="assets/js/highlight.min.js"></script>
   <style>
     .list-group-item,
@@ -31,7 +31,7 @@
 
 <body style="border:0px solid #ccc;padding:0px;position: absolute;overflow: auto; width:100%;height: 100%; ">
   <!-- NAV BAR -->
-  <header class="mdc-top-app-bar" style="background:#018786;max-width: 100% !important;padding:0px !important;">
+  <header class="mdc-top-app-bar" style="background:#018786;max-width: 100% !important;padding:0px !important;z-index: 9999 !important;">
     <div class="mdc-top-app-bar__row">
       <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
         <span class="mdc-top-app-bar__title">My SnipperCodeTX</span>
@@ -57,13 +57,13 @@
     </div>
   </header>
   <br /><br />
-  <div class="container-fluid">
+  <div class="container">
     <br />
     <div class="row">
       <div class="col-sm-12 col-md-12">
         <div class="row">
           <!-- CATEGORIAS -->
-          <div class="col-sm-3 col-md-3">
+          <div class="col-sm-3 col-md-3" style="position: fixed;left: 100px;">
             <div class="alert alert-success">
               <button class="float-right" title="Clique para adicionar uma nova categoria" data-toggle="modal"
                 data-target="#exampleModal" id="abrir-modal-criador-categoria">
@@ -84,11 +84,11 @@
                   Carregando categorias...
                 </li>
               </ul>
+              <!-- <a href="ace.html">Ace</a> -->
             </div>
-
           </div>
           <!-- CONTEÚDO -->
-          <div class="col-sm-9 col-md-9">
+          <div class="col-sm-6 col-md-6" style="position: fixed;left: 600px;">
             <div class="row">
               <div class="col-md-12">
                 <!-- PESQUISAR NOTAS -->
@@ -113,7 +113,7 @@
               <div class="col-md-12">
                 <!-- <span data-toggle=snackbar data-content="This is my awesome snackbar!"></span> -->
                 <div id="get-notes"
-                  style="border:0px solid red;overflow: auto;max-height: 670px;padding-left:20px;padding-right: 20px;">
+                  style="border:0px solid red;overflow: auto !important;padding-left:20px;padding-right: 20px;max-height: 800px;">
                   <div style="display: flex;
           height: 400px;
           text-align: center;
@@ -147,6 +147,8 @@
   <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
     integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
     crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-beautify.js"></script>
   <script>
     $("body").bootstrapMaterialDesign();
   </script>

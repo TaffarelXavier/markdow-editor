@@ -1,5 +1,5 @@
 const electron = require("electron");
-const { app, BrowserWindow } = electron;
+const { app, BrowserWindow, ipcMain } = electron;
 const path = require("path");
 const url = require("url");
 
@@ -20,6 +20,8 @@ function createWindow() {
     }
   });
 
+
+
   //Abrir o DevTools do nevegador
   //win.webContents.openDevTools()
 
@@ -36,7 +38,25 @@ function createWindow() {
   });
 }
 
+/*
+ipcMain.on('open-new-window', (event, fileName) => {
+  let win = new BrowserWindow({width:960, height:540})
+  win.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "public/ping.html"),
+      protocol: "file:",
+      slashes: true
+    })
+  );
+  console.log("AAA");
+});
+
+app.on("open-new-window", function(evebt, el){
+console.log("A");
+});*/
+
 app.on("ready", createWindow);
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

@@ -1,5 +1,13 @@
 ﻿`use strict`;
 
+sqlite.connect("./src/db/notes_db.db");
+
+let categories = sqlite.run("SELECT * FROM category;");
+
+let languages = sqlite.run("SELECT * FROM languages ORDER BY lang_name;");
+
+sqlite.close();
+
 function escapeHtml(unsafe) {
   return unsafe
     .replace(/&/g, "&amp;")
@@ -50,10 +58,21 @@ exports.notas = function(notas) {
       data-nota='${JSON.stringify(edicao)}'>
         edit
       </i>
-      <pre><code contenteditable class="${lang_name}" id="note_${note_id}">${escapeHtml(
+      <i class="material-icons open-code" 
+      title="Editar Nota"
+      data-nota='${JSON.stringify(edicao)}'>
+        refresh
+      </i>
+      <!--<pre><code contenteditable class="${lang_name}" id="note_${note_id}">${escapeHtml(
     note_code
-  )}</code></pre>
+  )}</code></pre>-->
     </div>
+  </div>
+  <!--ACE EDITOR-->
+  <div class="row">
+        <div class="col-sm-12 col-md-12">
+          <div class="editor" id="note_${note_id}" data-note='${JSON.stringify(edicao)}' style="width:100%;min-height:200px;">${escapeHtml(note_code)}</div>
+        </div>
   </div>
   <div class="dropdown-divider"></div></div>`;
   return content;
@@ -95,10 +114,6 @@ exports.modalCategory = function(titulo, idModal, idButton) {
  * Cria uma nova nota
  */
 exports.modalCriarNota = function(titulo, idModal, idButton) {
-  sqlite.connect("./src/db/notes_db.db");
-  let categories = sqlite.run("SELECT * FROM category;");
-  let languages = sqlite.run("SELECT * FROM languages ORDER BY lang_name;");
-  sqlite.close();
   let content = `<!-- Modal Criar Categoria -->
 <div class="modal fade bd-example-modal-lg" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg" role="document"><!--modal-lg-->
@@ -135,7 +150,9 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
           <select class="custom-select mr-sm-2" name="languages">
           <option selected>Choose...</option>`;
   for (let data of categories) {
-    content += `<option value="${data.category_id}">${data.category_name.toUpperCase()}</option>`;
+    content += `<option value="${
+      data.category_id
+    }">${data.category_name.toUpperCase()}</option>`;
   }
   content += `</select>
         </div>  
@@ -145,22 +162,26 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
           <label for="message-text" class="col-form-label"><strong>Linguagem para Formatação:</strong></label>
           <select class="custom-select mr-sm-2" name="formatacao-language">`;
   for (let data of languages) {
-    content += `<option value="${data.lang_id}">${data.lang_name.toUpperCase()}</option>`;
+    content += `<option value="${
+      data.lang_id
+    }">${data.lang_name.toUpperCase()}</option>`;
   }
   content += `</select>
           </div>
         </div>
+
         <div class="row">
           <div class="col-sm-12 col-md-12">
             <div class="form-group">
               <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
               <textarea class="form-control" name="code" id="code" placeholder="Digite seu snipper-code aqui" rows=5></textarea>
             </div>
-            <div id="get-data-mark"></div>
+            <!--<div id="get-data-mark"></div>
             <div id="get-data-not-formated"></div>
-            <div class="md"></div>
+            <div class="md"></div>-->
           </div>
         </div>
+
       </form>
     </div>
     <div class="modal-footer">
@@ -178,14 +199,7 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
  */
 
 exports.ModalEditarNota = function(titulo, idModal) {
-  sqlite.connect("./src/db/notes_db.db");
-
-  let categories = sqlite.run("SELECT * FROM category;");
-
-  sqlite.close();
-
-  let content = `
-<div class="modal fade" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  let content = `<div class="modal fade" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg" role="document"><!--modal-lg-->
   <div class="modal-content">
     <div class="modal-header">
@@ -195,8 +209,8 @@ exports.ModalEditarNota = function(titulo, idModal) {
       </button>
     </div>
     <div class="modal-body">
-      <form id="formSave">
-        <input type="text" id="nota-id" value="aaa"/>
+      <form id="form-editar-nota">
+        <input type="hidden" id="nota-id"/>
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Título:</strong></label>
           <input type="text" id="gd-title" class="form-control" required>
@@ -209,21 +223,39 @@ exports.ModalEditarNota = function(titulo, idModal) {
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
           <input type="text" id="gd-tags" class="form-control" required>
         </div>
-        <div class="form-group">
-          <label for="message-text" class="col-form-label"><strong>Linguagem:</strong></label>
-          <select class="custom-select mr-sm-2" name="languages">
+
+        <div class="row">
+          <!--COLUNA 1-->
+          <div class="col-sm-6 col-md-6">
+          <div class="form-group">
+          <label for="message-text" class="col-form-label"><strong>Categoria:</strong></label>
+          <select class="custom-select mr-sm-2" id="gd-gategory">
           <option selected>Choose...</option>`;
-
   for (let data of categories) {
-    content += `<option value="${data.category_id}">${data.category_name}</option>`;
+    content += `<option value="${
+      data.category_id
+    }">${data.category_name.toUpperCase()}</option>`;
   }
-
   content += `</select>
+        </div>  
+          </div>
+          <!--COLUNA 2-->
+          <div class="col-sm-6 col-md-6">
+          <label for="message-text" class="col-form-label"><strong>Linguagem para Formatação:</strong></label>
+          <select class="custom-select mr-sm-2" id="gd-language">`;
+  for (let data of languages) {
+    content += `<option value="${
+      data.lang_id
+    }">${data.lang_name.toUpperCase()}</option>`;
+  }
+  content += `</select>
+          </div>
         </div>
+
         <div class="form-group">
         <pre><code id="gd-get-note" contenteditable></code></pre>
-          <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
-          <textarea class="form-control" name="code" id="code"></textarea>
+          <!--<label for="message-text" class="col-form-label"><strong>Código:</strong></label>
+          <textarea class="form-control" name="code" id="code"></textarea>-->
         </div>
         <div id="get-data-mark"></div>
         <div id="get-data-not-formated"></div>
@@ -232,7 +264,7 @@ exports.ModalEditarNota = function(titulo, idModal) {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-      <button type="submit" form="formSave" class="mdc-fab mdc-fab--extended" id="salvarNota">Salvar nova nota</button>
+      <button type="submit" form="form-editar-nota" class="mdc-fab mdc-fab--extended" id="btnEditarNota">Salvar Edição</button>
     </div>
   </div>
 </div>

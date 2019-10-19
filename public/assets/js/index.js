@@ -8,14 +8,15 @@ const {
   ModalEditarNota,
   escapeHtml
 } = require("../src/components/framework.js");
-const { remote, clipboard} = require("electron");
+
+const { remote, clipboard, shell } = require("electron");
+
 const win = remote.getCurrentWindow();
 
 // Pode usar o jQuery normalmente agora.
 $(document).ready(function() {
   //Abre o modal de categorias:
   $("#abrir-modal-criador-categoria").click(function() {
-    alert("A");
     setTimeout(function() {
       $("#category-name")
         .focus()
@@ -27,7 +28,6 @@ $(document).ready(function() {
     Pesquisar Categorias:
     */
   $("#categoria").keyup(function() {
-
     let _value = $(this);
 
     _value = _value.val();
@@ -63,7 +63,7 @@ $(document).ready(function() {
     remote.getCurrentWindow().toggleDevTools();
   });
 
-  //Evento ao abrir o modal:
+  //Modal: Evento ao abrir o modal:
   $("#modalCriarNota").on("show.bs.modal", function(event) {
     setTimeout(() => {
       $("#note-title")
@@ -72,8 +72,6 @@ $(document).ready(function() {
         .val("");
     }, 500);
   });
-
-  $("#exampleModal").on("show.bs.modal", function(event) {});
 
   $("#idButton1").click(function() {
     let categoryName = $("#category-name")
@@ -100,6 +98,48 @@ $(document).ready(function() {
     }
   });
 
+  //FORMULÁRIO PARA EDITAR UMA NOTA:
+  $("#form-editar-nota").submit(function(ev) {
+    ev.preventDefault();
+
+    let nota_id = document.getElementById("nota-id").value;
+    let title = this.elements["gd-title"].value;
+    let description = this.elements["gd-description"].value;
+    let tags = this.elements["gd-tags"].value;
+    let code = document.getElementById("gd-get-note");
+
+    let category = document.getElementById("gd-gategory");
+    let language = document.getElementById("gd-language");
+
+    console.log(nota_id);
+    console.log(title);
+    console.log(description);
+    console.log(tags);
+    console.log(code.innerText);
+    console.log(category[category.selectedIndex]);
+    console.log(language[language.selectedIndex]);
+
+    let sql = `UPDATE notes SET note_title =?, note_description = ?, note_code = ?,
+        note_category_id = ?, note_type_language = ? WHERE  note_id = ? `;
+
+    /*
+    db.run(
+      sql,
+      [title, description, code, category.value, language.value, Date.now()],
+      function(err) {
+        if (err) {
+          return console.error(err.message);
+        }
+        if (this.changes > 0) {
+          alert("Nota criada com sucesso!");
+          carregarCategorias();
+        }
+      }
+    );*/
+    return false;
+  });
+
+  //CRIAR NOVA NOTA:
   $("#formSave").submit(function(ev) {
     ev.preventDefault();
 
@@ -108,9 +148,13 @@ $(document).ready(function() {
     let tags = this.elements.tags.value;
     let code = this.elements.code.value;
 
-    let category = this.elements.languages[this.elements.languages.selectedIndex];
+    let category = this.elements.languages[
+      this.elements.languages.selectedIndex
+    ];
 
-    let language  = this.elements['formatacao-language'][this.elements['formatacao-language'].selectedIndex]
+    let language = this.elements["formatacao-language"][
+      this.elements["formatacao-language"].selectedIndex
+    ];
 
     let sql = `INSERT INTO notes(note_title, note_description, note_code,
         note_category_id, note_type_language, created_at) VALUES (?,?,?,?,?,?);`;
@@ -130,17 +174,18 @@ $(document).ready(function() {
     );
     return false;
   });
+
   /**
    * Função para Buscar notas por categoria_id
    * */
   function getNotesByCategoryId(category_id) {
-    
     sqlite.connect("./src/db/notes_db.db");
 
-    let rows = sqlite.run(`SELECT * FROM notes AS t1 JOIN languages AS t2
-    ON t1.note_type_language = t2.lang_id WHERE note_category_id = ? ;`, [
-      category_id,
-    ]);
+    let rows = sqlite.run(
+      `SELECT * FROM notes AS t1 JOIN languages AS t2
+    ON t1.note_type_language = t2.lang_id WHERE note_category_id = ? ;`,
+      [category_id]
+    );
 
     sqlite.close();
 
@@ -150,14 +195,13 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
 
   function carregarCategorias() {
     db.serialize(() => {
-
       var rows = document.getElementById("category");
 
       rows.innerHTML = "";
@@ -171,13 +215,21 @@ $(document).ready(function() {
             console.error(err.message);
           }
 
+          let { category_id } = row;
+
           var item = document.createElement("li");
 
+          //Ao clicar em alguma categoria:::
           item.onclick = function() {
-            $('.list-group-item').removeClass("list-group-item-action list-group-item-success");
-            $(this).addClass('list-group-item-action list-group-item-success','disabled');
+            $(".list-group-item").removeClass(
+              "list-group-item-action list-group-item-success"
+            );
+            $(this).addClass(
+              "list-group-item-action list-group-item-success",
+              "disabled"
+            );
             //Busca as categorias
-            let rows = getNotesByCategoryId(row.category_id);
+            let rows = getNotesByCategoryId(category_id);
 
             let content = "";
 
@@ -191,9 +243,8 @@ $(document).ready(function() {
 
             //Exluir nota:
             $(".excluir-nota").click(function() {
-
               let note_id = parseInt($(this).attr("data-nota-id"));
-              
+
               let options = {
                 type: "question",
                 buttons: ["Não", "Sim"],
@@ -201,7 +252,7 @@ $(document).ready(function() {
                 message: "Esta operação não poderá ser revertida.",
                 detail: "Algum detalhe aqui",
                 defaultId: 0,
-                cancelId: -1,
+                cancelId: -1
               };
 
               remote.dialog.showMessageBox(win, options, response => {
@@ -222,31 +273,39 @@ $(document).ready(function() {
                   );
                 }
               });
-            
             });
 
             //Editar Nota
             $(".editar-nota").click(function() {
-
-              var nota = JSON.parse($(this).attr("data-nota"));
+             
+              var {
+                note_id,
+                note_title,
+                note_description,
+                note_tags,
+                note_type_language
+              } = JSON.parse($(this).attr("data-nota"));
 
               $("#modalEditarNota").modal("show");
 
-              $("#gd-title").val(nota.note_title);
+              $("#gd-title").val(note_title);
 
-              $("#gd-description").val(nota.note_description);
+              $("#gd-description").val(note_description);
 
-              $("#gd-tags").val(nota.note_tags);
+              $("#gd-tags").val(note_tags);
+
+              var editor = ace.edit(document.getElementById(`note_${note_id}`));
 
               $("#gd-get-note")
-                .html(escapeHtml($(`#note_${nota.note_id}`).text()))
-                .addClass(nota.note_type_language);
+                .html(escapeHtml(editor.getValue()))
+                .addClass(note_type_language);
 
-              $("#nota-id").val(nota.note_id);
+              $("#nota-id").val(note_id);
 
+              /*
               $("pre code").each(function(i, e) {
                 hljs.highlightBlock(e);
-              });
+              });*/
             });
 
             //Para copiar uma nota:
@@ -254,12 +313,21 @@ $(document).ready(function() {
               $(this).click(function(ev) {
                 let note_id = $(this).attr("data-id");
 
-                clipboard.writeText($(`#note_${note_id}`).text());
+                var editor = ace.edit(
+                  document.getElementById(`note_${note_id}`)
+                );
+
+                //beautify.beautify(editor.session);
+
+                var beautify = ace.require("ace/ext/beautify"); // get reference to extension
+                beautify.beautify(editor.session);
+
+                clipboard.writeText(editor.getValue());
 
                 var options = {
                   content: "Código copiado com sucesso!", // text of the snackbar
                   style: "toast", // add a custom class to your snackbar
-                  timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
+                  timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
                 };
 
                 $.snackbar(options);
@@ -269,8 +337,49 @@ $(document).ready(function() {
             // hljs.initHighlighting.called = false;
             // hljs.initHighlighting();
             $("pre code").each(function(i, e) {
-              hljs.highlightBlock(e);
+              //hljs.highlightBlock(e);
             });
+
+            //Ace Editor
+            $(".editor").each(function(i, el) {
+              var _this = $(this);
+
+              let { lang_name } = JSON.parse(_this.attr("data-note"));
+
+              var editor = ace.edit(el);
+
+              el.style.fontSize = "1.3vmin";
+
+              editor.setTheme("ace/theme/dracula");
+
+              editor.session.setMode("ace/mode/" + lang_name);
+
+              editor.session.setTabSize(4);
+
+              editor.resize();
+
+              editor.setOptions({
+                autoScrollEditorIntoView: true,
+                copyWithEmptySelection: true
+              });
+            });
+
+            $(".open-code").click(function() {
+              var _this = $(this);
+
+              let { note_id } = JSON.parse(_this.attr("data-nota"));
+
+              win.webContents.send("open-new-window", "ping");
+
+              window.open("ping.html", "Título", "myWindow");
+
+              // win.loadURL(`file://${__dirname}/ping.html`)
+              // win.webContents.on('did-finish-load', () => {
+              //   win.webContents.send('ping', 'whoooooooh!')
+              // });
+              // win.show();
+            });
+
             return false;
           };
 
