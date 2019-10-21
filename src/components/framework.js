@@ -114,7 +114,7 @@ exports.modalCategory = function(titulo, idModal, idButton) {
  * Cria uma nova nota
  */
 exports.modalCriarNota = function(titulo, idModal, idButton) {
-  let content = `<!-- Modal Criar Categoria -->
+  let content = `<!-- Modal Criar Nota -->
 <div class="modal fade bd-example-modal-lg" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg" role="document"><!--modal-lg-->
   <div class="modal-content">
@@ -139,7 +139,8 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
 
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
-          <input type="text" name="tags" class="form-control" placeholder="Tags do snipper-code"  required>
+          <select id="select-tags" multiple="multiple" style="border:1px solid red !important;width:100%;" class="form-control">
+          </select>
         </div>
 
         <div class="row">
@@ -176,9 +177,6 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
               <label for="message-text" class="col-form-label"><strong>Código:</strong></label>
               <textarea class="form-control" name="code" id="code" placeholder="Digite seu snipper-code aqui" rows=5></textarea>
             </div>
-            <!--<div id="get-data-mark"></div>
-            <div id="get-data-not-formated"></div>
-            <div class="md"></div>-->
           </div>
         </div>
 
@@ -190,7 +188,27 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
     </div>
   </div>
 </div>
-</div>`;
+</div>
+<script>
+/*$("#select-tags").select2({
+  createTag: function(params) {
+    var term = $.trim(params.term);
+
+    if (term === "") {
+      return null;
+    }
+
+    return {
+      id: term,
+      text: term,
+      newTag: true // add additional parameters
+    };
+  },
+  tags: true,
+  tokenSeparators: [",", " "]
+});*/
+</script>
+`;
   return content;
 };
 

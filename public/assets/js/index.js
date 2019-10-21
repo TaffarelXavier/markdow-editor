@@ -13,6 +13,10 @@ const { remote, clipboard, shell } = require("electron");
 
 const win = remote.getCurrentWindow();
 
+setTimeout(function() {
+  console.clear();
+}, 500);
+
 // Pode usar o jQuery normalmente agora.
 $(document).ready(function() {
   //Abre o modal de categorias:
@@ -57,22 +61,24 @@ $(document).ready(function() {
     ModalEditarNota("Editar Nota", "modalEditarNota", "btnAlterarNota")
   );
 
-  //$("#modallll").modal("show");
-
   $("#abrir-dev-tools").click(function() {
     remote.getCurrentWindow().toggleDevTools();
   });
+
+  funcSelect2("#select-tags");
 
   //Modal: Evento ao abrir o modal:
   $("#modalCriarNota").on("show.bs.modal", function(event) {
     setTimeout(() => {
       $("#note-title")
         .focus()
-        .select()
-        .val("");
+        .select();
     }, 500);
   });
 
+  /**
+   * Criar Categoria
+   */
   $("#idButton1").click(function() {
     let categoryName = $("#category-name")
       .val()
@@ -142,10 +148,9 @@ $(document).ready(function() {
   //CRIAR NOVA NOTA:
   $("#formSave").submit(function(ev) {
     ev.preventDefault();
-
+    let _this = this;
     let title = this.elements.title.value;
     let description = this.elements.description.value;
-    let tags = this.elements.tags.value;
     let code = this.elements.code.value;
 
     let category = this.elements.languages[
@@ -155,6 +160,43 @@ $(document).ready(function() {
     let language = this.elements["formatacao-language"][
       this.elements["formatacao-language"].selectedIndex
     ];
+
+    //Trabalhar com Tags:
+
+    var arrInserTags = [];
+
+    let tags = $("#select-tags")
+      .select2("data")
+      .map(function(el) {
+        sqlite.connect("./src/db/notes_db.db");
+
+        let rows = sqlite.run(
+          `SELECT tag_id, COUNT(*) AS total FROM tags WHERE tag_name = ?`,
+          [el.text.toLowerCase()]
+        );
+        //Adicionar uma nova chave ao array
+        let result = rows.map(elm => {
+          elm.text = el.text.toLowerCase();
+          return elm;
+        });
+
+        //Caso Já exista
+        if (rows[0].total > 0) {
+          arrInserTags.push(result[0]);
+        } else {
+          // Se não existir
+          var last_insert_id = sqlite.run(
+            "INSERT INTO tags (tag_name) VALUES (?)",
+            [el.text.toLowerCase()]
+          );
+          arrInserTags.push({
+            tag_id: last_insert_id,
+            text: el.text.toLowerCase()
+          });
+        }
+
+        return el.text;
+      });
 
     let sql = `INSERT INTO notes(note_title, note_description, note_code,
         note_category_id, note_type_language, created_at) VALUES (?,?,?,?,?,?);`;
@@ -166,9 +208,24 @@ $(document).ready(function() {
         if (err) {
           return console.error(err.message);
         }
+
+        let _lastId = this.lastID;
+
         if (this.changes > 0) {
-          alert("Nota criada com sucesso!");
-          carregarCategorias();
+          _this.reset(); //limpa o formulário
+
+          alert("Nota criada com sucesso!"); //Cria uma nota
+
+          carregarCategorias(); //Carrega as categoriasa
+
+          arrInserTags.map(el => {
+            sqlite.connect("./src/db/notes_db.db");
+            var last_insert_id = sqlite.run(
+              `INSERT INTO note_tag (nt_note_fk_id, nt_tag_fk_id) VALUES (?,?);`,
+              [el.tag_id, _lastId]
+            );
+            console.log(last_insert_id);
+          });
         }
       }
     );
@@ -183,7 +240,7 @@ $(document).ready(function() {
 
     let rows = sqlite.run(
       `SELECT * FROM notes AS t1 JOIN languages AS t2
-    ON t1.note_type_language = t2.lang_id WHERE note_category_id = ? ;`,
+    ON t1.note_type_language = t2.lang_id WHERE note_category_id = ? ORDER BY t1.created_at DESC;`,
       [category_id]
     );
 
@@ -277,7 +334,6 @@ $(document).ready(function() {
 
             //Editar Nota
             $(".editar-nota").click(function() {
-             
               var {
                 note_id,
                 note_title,
@@ -348,7 +404,7 @@ $(document).ready(function() {
 
               var editor = ace.edit(el);
 
-              el.style.fontSize = "1.3vmin";
+              el.style.fontSize = "16px"; //1.5vmin
 
               editor.setTheme("ace/theme/dracula");
 
@@ -372,12 +428,6 @@ $(document).ready(function() {
               win.webContents.send("open-new-window", "ping");
 
               window.open("ping.html", "Título", "myWindow");
-
-              // win.loadURL(`file://${__dirname}/ping.html`)
-              // win.webContents.on('did-finish-load', () => {
-              //   win.webContents.send('ping', 'whoooooooh!')
-              // });
-              // win.show();
             });
 
             return false;
