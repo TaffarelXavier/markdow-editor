@@ -1,25 +1,35 @@
 const sqlite = require("sqlite-sync"); //requiring
 const $ = require("jQuery");
-const db = require("../src/conexao.js");
 const {
   notas,
   modalCategory,
   modalCriarNota,
   ModalEditarNota,
-  escapeHtml
+  escapeHtml,
 } = require("../src/components/framework.js");
 
-const { remote, clipboard, shell } = require("electron");
+const { remote, clipboard } = require("electron");
+
+const app = remote.app;
+
+//Caminho do Banco de Dados SQLITE3
+const PATH_DB = app.getAppPath() + "/src/db/notes_db.db";
+
+console.log(PATH_DB);
+
+console.log("app.getPath('userData')=" + app.getPath("userData"));
+console.log("app.getPath('home')=" + app.getPath("home"));
+console.log("exe=" + app.getPath("exe"));
+console.log("getAppPath()=" + app.getAppPath());
 
 const win = remote.getCurrentWindow();
 
 setTimeout(function() {
-  console.clear();
+  //console.clear();
 }, 500);
 
 // Pode usar o jQuery normalmente agora.
 $(document).ready(function() {
-
   //Abre o modal de categorias:
   $("#abrir-modal-criador-categoria").click(function() {
     setTimeout(function() {
@@ -129,26 +139,13 @@ $(document).ready(function() {
     let sql = `UPDATE notes SET note_title =?, note_description = ?, note_code = ?,
         note_category_id = ?, note_type_language = ? WHERE  note_id = ? `;
 
-    /*
-    db.run(
-      sql,
-      [title, description, code, category.value, language.value, Date.now()],
-      function(err) {
-        if (err) {
-          return console.error(err.message);
-        }
-        if (this.changes > 0) {
-          alert("Nota criada com sucesso!");
-          carregarCategorias();
-        }
-      }
-    );*/
     return false;
   });
 
   //CRIAR NOVA NOTA:
   $("#formSave").submit(function(ev) {
     ev.preventDefault();
+
     let _this = this;
     let title = this.elements.title.value;
     let description = this.elements.description.value;
@@ -166,11 +163,11 @@ $(document).ready(function() {
 
     var arrInserTags = [];
 
+    sqlite.connect(PATH_DB);
+
     let tags = $("#select-tags")
       .select2("data")
       .map(function(el) {
-        sqlite.connect("./src/db/notes_db.db");
-
         let rows = sqlite.run(
           `SELECT tag_id, COUNT(*) AS total FROM tags WHERE tag_name = ?`,
           [el.text.toLowerCase()]
@@ -192,44 +189,40 @@ $(document).ready(function() {
           );
           arrInserTags.push({
             tag_id: last_insert_id,
-            text: el.text.toLowerCase()
+            text: el.text.toLowerCase(),
           });
         }
-
         return el.text;
       });
 
     let sql = `INSERT INTO notes(note_title, note_description, note_code,
         note_category_id, note_type_language, created_at) VALUES (?,?,?,?,?,?);`;
-
-    db.run(
+    //Prepared SQL
+    sqlite.run(
       sql,
       [title, description, code, category.value, language.value, Date.now()],
-      function(err) {
-        if (err) {
-          return console.error(err.message);
-        }
+      function(id) {
+        let _lastId = id;
 
-        let _lastId = this.lastID;
+        _this.reset(); //limpa o formulário
 
-        if (this.changes > 0) {
-          _this.reset(); //limpa o formulário
+        alert("Nota criada com sucesso!"); //Cria uma nota
 
-          alert("Nota criada com sucesso!"); //Cria uma nota
+        carregarCategorias(); //Carrega as categoriasa
 
-          carregarCategorias(); //Carrega as categoriasa
-
-          arrInserTags.map(el => {
-            sqlite.connect("./src/db/notes_db.db");
-            var last_insert_id = sqlite.run(
-              `INSERT INTO note_tag (nt_note_fk_id, nt_tag_fk_id) VALUES (?,?);`,
-              [_lastId, el.tag_id]
-            );
-            console.log(last_insert_id);
-          });
-        }
+        arrInserTags.map(el => {
+          sqlite.connect(PATH_DB);
+          var last_insert_id = sqlite.run(
+            `INSERT INTO note_tag (nt_note_fk_id, nt_tag_fk_id) VALUES (?, ?);`,
+            [_lastId, el.tag_id]
+          );
+          console.log(last_insert_id);
+        });
       }
     );
+
+    sqlite.close();
+
     return false;
   });
 
@@ -237,12 +230,12 @@ $(document).ready(function() {
    * Função para Buscar notas por categoria_id
    * */
   function getNotesByCategoryId(category_id) {
-
-    sqlite.connect("./src/db/notes_db.db");
+    sqlite.connect(PATH_DB);
 
     let rows = sqlite.run(
       `SELECT * FROM notes AS t1 JOIN languages AS t2
-    ON t1.note_type_language = t2.lang_id WHERE note_category_id = ? ORDER BY t1.created_at DESC;`,
+    ON t1.note_type_language = t2.lang_id WHERE note_category_id = ?
+     ORDER BY t1.created_at DESC;`,
       [category_id]
     );
 
@@ -254,205 +247,200 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
 
   function carregarCategorias() {
+    sqlite.connect(PATH_DB);
 
-    db.serialize(() => {
-      var rows = document.getElementById("category");
+    var rows = document.getElementById("category");
 
-      rows.innerHTML = "";
+    rows.innerHTML = "";
 
-      db.each(
-        `SELECT note_category_id, category_id, category_name, COUNT(*) as count FROM notes as t1
-    JOIN category as t2 ON t2.category_id = t1.note_category_id
-    GROUP BY note_category_id`,
-        (err, row) => {
-          if (err) {
-            console.error(err.message);
+    let result = sqlite.run(
+      `SELECT note_category_id, category_id, category_name, COUNT(*) as count FROM notes as t1
+      JOIN category as t2 ON t2.category_id = t1.note_category_id
+      GROUP BY note_category_id`
+    );
+
+    result.map(row => {
+      //INÍCIO - BUSCA CATEGORIAS
+      let { category_id } = row;
+
+      var item = document.createElement("li");
+
+      //Ao clicar em alguma categoria:::
+      item.onclick = function() {
+        $(".list-group-item").removeClass(
+          "list-group-item-action list-group-item-success"
+        );
+        $(this).addClass(
+          "list-group-item-action list-group-item-success",
+          "disabled"
+        );
+        //Busca as categorias
+        let rows = getNotesByCategoryId(category_id);
+
+        let content = "";
+
+        if (Object.keys(rows).length > 0) {
+          for (let data of rows) {
+            sqlite.connect(PATH_DB);
+
+            let rows = sqlite.run(
+              `SELECT tag_id, tag_name from tags AS t1 JOIN note_tag AS t2 ON t1.tag_id = t2.nt_tag_fk_id WHERE t2.nt_note_fk_id = ?`,
+              [data.note_id]
+            );
+
+            content += notas(data, rows);
+
+            sqlite.close();
           }
-
-          let { category_id } = row;
-
-          var item = document.createElement("li");
-
-          //Ao clicar em alguma categoria:::
-          item.onclick = function() {
-            
-            $(".list-group-item").removeClass(
-              "list-group-item-action list-group-item-success"
-            );
-            $(this).addClass(
-              "list-group-item-action list-group-item-success",
-              "disabled"
-            );
-            //Busca as categorias
-            let rows = getNotesByCategoryId(category_id);
-
-            let content = "";
-
-            if (Object.keys(rows).length > 0) {
-
-              for (let data of rows) {
-                
-                sqlite.connect("./src/db/notes_db.db");
-
-                let rows = sqlite.run(
-                  `SELECT tag_id, tag_name from tags AS t1 JOIN note_tag AS t2 ON t1.tag_id = t2.nt_tag_fk_id WHERE t2.nt_note_fk_id = ?`,
-                  [data.note_id]
-                );
-
-                content += notas(data, rows);
-              }
-            }
-
-            $("#get-notes").html(content);
-
-            //Exluir nota:
-            $(".excluir-nota").click(function() {
-              let note_id = parseInt($(this).attr("data-nota-id"));
-
-              let options = {
-                type: "question",
-                buttons: ["Não", "Sim"],
-                title: "Deseja realmente excluir esta nota?",
-                message: "Esta operação não poderá ser revertida.",
-                detail: "Algum detalhe aqui",
-                defaultId: 0,
-                cancelId: -1
-              };
-
-              remote.dialog.showMessageBox(win, options, response => {
-                if (response == 1) {
-                  $(`#note_card_${note_id}`).remove();
-                  // delete a row based on id
-                  db.run(
-                    `DELETE FROM notes WHERE note_id = ?`,
-                    note_id,
-                    function(err) {
-                      if (err) {
-                        alert(JSON.stringify(err.message));
-                        return false;
-                      }
-                      console.log(`Row(s) deleted ${this.changes}`);
-                      carregarCategorias();
-                    }
-                  );
-                }
-              });
-            });
-
-            //Editar Nota
-            $(".editar-nota").click(function() {
-              var {
-                note_id,
-                note_title,
-                note_description,
-                note_tags,
-                note_type_language
-              } = JSON.parse($(this).attr("data-nota"));
-
-              $("#modalEditarNota").modal("show");
-
-              $("#gd-title").val(note_title);
-
-              $("#gd-description").val(note_description);
-
-              $("#gd-tags").val(note_tags);
-
-              var editor = ace.edit(document.getElementById(`note_${note_id}`));
-
-              $("#gd-get-note")
-                .html(escapeHtml(editor.getValue()))
-                .addClass(note_type_language);
-
-              $("#nota-id").val(note_id);
-
-              /*
-              $("pre code").each(function(i, e) {
-                hljs.highlightBlock(e);
-              });*/
-            });
-
-            //Para copiar uma nota:
-            $(".copiar").each(function(index, element) {
-              $(this).click(function(ev) {
-                let note_id = $(this).attr("data-id");
-
-                var editor = ace.edit(
-                  document.getElementById(`note_${note_id}`)
-                );
-
-                //beautify.beautify(editor.session);
-
-                var beautify = ace.require("ace/ext/beautify"); // get reference to extension
-                beautify.beautify(editor.session);
-
-                clipboard.writeText(editor.getValue());
-
-                var options = {
-                  content: "Código copiado com sucesso!", // text of the snackbar
-                  style: "toast", // add a custom class to your snackbar
-                  timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
-                };
-
-                $.snackbar(options);
-              });
-            });
-
-            //Ace Editor
-            $(".editor").each(function(i, el) {
-              var _this = $(this);
-
-              let { lang_name } = JSON.parse(_this.attr("data-note"));
-
-              var editor = ace.edit(el);
-
-              el.style.fontSize = "16px"; //1.5vmin
-
-              editor.setTheme("ace/theme/dracula");
-
-              editor.session.setMode("ace/mode/" + lang_name);
-
-              editor.session.setTabSize(4);
-
-              editor.resize();
-
-              editor.setOptions({
-                autoScrollEditorIntoView: true,
-                copyWithEmptySelection: true
-              });
-            });
-
-            $(".open-code").click(function() {
-              var _this = $(this);
-
-              let { note_id } = JSON.parse(_this.attr("data-nota"));
-
-              win.webContents.send("open-new-window", "ping");
-
-              window.open("ping.html", "Título", "myWindow");
-            });
-
-            return false;
-          };
-          //Adiciona classes às categorias:
-          $(item)
-            .addClass(
-              "list-group-item justify-content-between"
-            ).css({borderBottom:"1px dashed #ccc", padding:"0px !important"})
-            .html(`${row.category_name.toUpperCase()}
-            <span class='badge badge-primary badge-pill' style="float:right;margin:0">${row.count}</span>`
-            )
-            .attr("data-category", JSON.stringify(row))
-            .attr("title", row.category_name.toUpperCase());
-
-          rows.appendChild(item);
         }
-      );
+
+        $("#get-notes").html(content);
+
+        //Exluir nota:
+        $(".excluir-nota").click(function() {
+          let note_id = parseInt($(this).attr("data-nota-id"));
+
+          let options = {
+            type: "question",
+            buttons: ["Não", "Sim"],
+            title: "Deseja realmente excluir esta nota?",
+            message: "Esta operação não poderá ser revertida.",
+            detail: "Algum detalhe aqui",
+            defaultId: 0,
+            cancelId: -1,
+          };
+
+          remote.dialog.showMessageBox(win, options, response => {
+            if (response == 1) {
+              $(`#note_card_${note_id}`).remove();
+              // delete a row based on id
+              sqlite.connect(PATH_DB);
+
+              sqlite.runAsync(
+                "DELETE FROM notes WHERE note_id = ?;",
+                [note_id],
+                function(result) {
+                  console.log(result);
+                  carregarCategorias();
+                  sqlite.close();
+                }
+              );
+            }
+          });
+        });
+
+        //Editar Nota
+        $(".editar-nota").click(function() {
+          var {
+            note_id,
+            note_title,
+            note_description,
+            note_tags,
+            note_type_language,
+          } = JSON.parse($(this).attr("data-nota"));
+
+          $("#modalEditarNota").modal("show");
+
+          $("#gd-title").val(note_title);
+
+          $("#gd-description").val(note_description);
+
+          $("#gd-tags").val(note_tags);
+
+          var editor = ace.edit(document.getElementById(`note_${note_id}`));
+
+          $("#gd-get-note")
+            .html(escapeHtml(editor.getValue()))
+            .addClass(note_type_language);
+
+          $("#nota-id").val(note_id);
+
+          $("pre code").each(function(i, e) {
+            hljs.highlightBlock(e);
+          });
+        });
+
+        //Para copiar uma nota:
+        $(".copiar").each(function(index, element) {
+          $(this).click(function(ev) {
+            let note_id = $(this).attr("data-id");
+
+            var editor = ace.edit(document.getElementById(`note_${note_id}`));
+
+            //beautify.beautify(editor.session);
+
+            var beautify = ace.require("ace/ext/beautify"); // get reference to extension
+            beautify.beautify(editor.session);
+
+            clipboard.writeText(editor.getValue());
+
+            var options = {
+              content: "Código copiado com sucesso!", // text of the snackbar
+              style: "toast", // add a custom class to your snackbar
+              timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
+            };
+
+            $.snackbar(options);
+          });
+        });
+
+        //Ace Editor
+        $(".editor").each(function(i, el) {
+          var _this = $(this);
+
+          let { lang_name } = JSON.parse(_this.attr("data-note"));
+
+          var editor = ace.edit(el);
+
+          el.style.fontSize = "16px"; //1.5vmin
+
+          editor.setTheme("ace/theme/dracula");
+
+          editor.session.setMode("ace/mode/" + lang_name);
+
+          editor.session.setTabSize(4);
+
+          editor.resize();
+
+          editor.setOptions({
+            autoScrollEditorIntoView: true,
+            copyWithEmptySelection: true,
+          });
+        });
+
+        $(".open-code").click(function() {
+          var _this = $(this);
+
+          let { note_id } = JSON.parse(_this.attr("data-nota"));
+
+          win.webContents.send("open-new-window", "ping");
+
+          window.open("ping.html", "Título", "myWindow");
+        });
+
+        return false;
+      };
+      //Adiciona classes às categorias:
+      $(item)
+        .addClass("list-group-item justify-content-between")
+        .css({ borderBottom: "1px dashed #ccc", padding: "0px !important" })
+        .html(
+          `${row.category_name.toUpperCase()}
+   <span class='badge badge-primary badge-pill'
+    style="float:right;margin:0">${row.count}</span>`
+        )
+        .attr("data-category", JSON.stringify(row))
+        .attr("title", row.category_name.toUpperCase());
+
+      rows.appendChild(item);
+
+      //FIM - BUSCA CATEGORIAS
     });
   }
 

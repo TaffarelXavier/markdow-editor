@@ -1,6 +1,14 @@
 ﻿`use strict`;
 
-sqlite.connect("./src/db/notes_db.db");
+const { remote } = require("electron");
+
+const app = remote.app;
+
+const PATH_DB = app.getAppPath() + "/src/db/notes_db.db";
+
+
+
+sqlite.connect(PATH_DB);
 
 let categories = sqlite.run("SELECT * FROM category;");
 
@@ -33,6 +41,8 @@ exports.notas = function(notas, rows) {
   let { note_id, note_title, note_description, note_code, lang_name } = notas;
 
   let tags = "";
+
+console.log(rows);
 
   if (rows.length > 0) {
     tags = rows.map(el => {
