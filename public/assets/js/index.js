@@ -19,6 +19,7 @@ setTimeout(function() {
 
 // Pode usar o jQuery normalmente agora.
 $(document).ready(function() {
+
   //Abre o modal de categorias:
   $("#abrir-modal-criador-categoria").click(function() {
     setTimeout(function() {
@@ -222,7 +223,7 @@ $(document).ready(function() {
             sqlite.connect("./src/db/notes_db.db");
             var last_insert_id = sqlite.run(
               `INSERT INTO note_tag (nt_note_fk_id, nt_tag_fk_id) VALUES (?,?);`,
-              [el.tag_id, _lastId]
+              [_lastId, el.tag_id]
             );
             console.log(last_insert_id);
           });
@@ -236,6 +237,7 @@ $(document).ready(function() {
    * Função para Buscar notas por categoria_id
    * */
   function getNotesByCategoryId(category_id) {
+
     sqlite.connect("./src/db/notes_db.db");
 
     let rows = sqlite.run(
@@ -258,6 +260,7 @@ $(document).ready(function() {
   $.snackbar(options);
 
   function carregarCategorias() {
+
     db.serialize(() => {
       var rows = document.getElementById("category");
 
@@ -278,6 +281,7 @@ $(document).ready(function() {
 
           //Ao clicar em alguma categoria:::
           item.onclick = function() {
+            
             $(".list-group-item").removeClass(
               "list-group-item-action list-group-item-success"
             );
@@ -291,8 +295,17 @@ $(document).ready(function() {
             let content = "";
 
             if (Object.keys(rows).length > 0) {
+
               for (let data of rows) {
-                content += notas(data);
+                
+                sqlite.connect("./src/db/notes_db.db");
+
+                let rows = sqlite.run(
+                  `SELECT tag_id, tag_name from tags AS t1 JOIN note_tag AS t2 ON t1.tag_id = t2.nt_tag_fk_id WHERE t2.nt_note_fk_id = ?`,
+                  [data.note_id]
+                );
+
+                content += notas(data, rows);
               }
             }
 
@@ -390,12 +403,6 @@ $(document).ready(function() {
               });
             });
 
-            // hljs.initHighlighting.called = false;
-            // hljs.initHighlighting();
-            $("pre code").each(function(i, e) {
-              //hljs.highlightBlock(e);
-            });
-
             //Ace Editor
             $(".editor").each(function(i, el) {
               var _this = $(this);
@@ -432,14 +439,13 @@ $(document).ready(function() {
 
             return false;
           };
-
+          //Adiciona classes às categorias:
           $(item)
             .addClass(
-              "list-group-item d-flex justify-content-between align-items-center"
-            )
-            .html(
-              row.category_name.toUpperCase() +
-                ` <span class='badge badge-primary badge-pill'>${row.count}</span>`
+              "list-group-item justify-content-between"
+            ).css({borderBottom:"1px dashed #ccc", padding:"0px !important"})
+            .html(`${row.category_name.toUpperCase()}
+            <span class='badge badge-primary badge-pill' style="float:right;margin:0">${row.count}</span>`
             )
             .attr("data-category", JSON.stringify(row))
             .attr("title", row.category_name.toUpperCase());

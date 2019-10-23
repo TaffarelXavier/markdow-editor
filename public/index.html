@@ -28,6 +28,15 @@
       border: 0px solid red;
       border-radius: 5px;
     }
+    .list-group-item{
+      /* border:5px solid lime !important; */
+      padding:10px 5px !important;
+      align-items: flex-end !important;
+      justify-content: first baseline !important;
+    }
+    .list-group-item:hover{
+      background: cornflowerblue;
+    }
   </style>
 </head>
 
@@ -66,32 +75,41 @@
       <div class="col-sm-12 col-md-12">
         <div class="row">
           <!-- CATEGORIAS -->
-          <div class="col-sm-3 col-md-3" style="position: fixed;left: 100px;">
-            <div class="alert alert-success">
-              <button class="float-right" title="Clique para adicionar uma nova categoria" data-toggle="modal"
-                data-target="#exampleModal" id="abrir-modal-criador-categoria">
-                <i class="material-icons">
-                  add_circle_outline
-                </i>
-              </button>
-              <strong>Suas Categorias:</strong>
+          <div class="col-sm-4 col-md-4" style="border:1px dotted #ccc;">
+            <div class="row">
+              <div class="col-ms-12 col-md-12">
+                <div class="alert alert-success" style="border:1px dashed #ccc;margin-top:15px !important;">
+                  <button class="float-right" title="Clique para adicionar uma nova categoria" data-toggle="modal"
+                    data-target="#exampleModal" id="abrir-modal-criador-categoria">
+                    <i class="material-icons">
+                      add_circle_outline
+                    </i>
+                  </button>
+                  <strong>Suas Categorias:</strong>
+                </div>
+              </div>
             </div>
-            <div class="input-group mb-3">
-              <input type="search" class="form-control" id="categoria"
-                placeholder="Pesquisar por nome, descrição ou linguagem" autofocus />
+            <div class="row">
+              <div class="col-ms-12 col-md-12">
+                <div class="input-group mb-3">
+                  <input type="search" class="form-control" id="categoria"
+                    placeholder="Pesquisar por nome, descrição ou linguagem" autofocus />
+                </div>
+              </div>
             </div>
             <!-- CATEGORIAS -->
             <div class="row">
-              <ul class="list-group" id="category">
-                <li class="list-group-item list-group-item-action">
-                  Carregando categorias...
-                </li>
-              </ul>
-              <!-- <a href="ace.html">Ace</a> -->
+              <div class="col-ms-12 col-md-12">
+                <ul class="list-group" id="category"style="border-top:1px solid #ccc;">
+                  <li class="list-group-item list-group-item-action">
+                    Carregando categorias...
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <!-- CONTEÚDO -->
-          <div class="col-sm-6 col-md-6" style="position: fixed;left: 600px;">
+          <div class="col-sm-8 col-md-8" style="">
             <div class="row">
               <div class="col-md-12">
                 <!-- PESQUISAR NOTAS -->

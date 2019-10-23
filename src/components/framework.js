@@ -29,8 +29,17 @@ exports.escapeHtml = function(unsafe) {
 /**
  * Mostra as notas
  */
-exports.notas = function(notas) {
+exports.notas = function(notas, rows) {
   let { note_id, note_title, note_description, note_code, lang_name } = notas;
+
+  let tags = "";
+
+  if (rows.length > 0) {
+    tags = rows.map(el => {
+      return `<strong style="padding:5px;border-radius:25px;border:1px solid #cccc;">${el.tag_name.toUpperCase()}</strong>`;
+    });
+    tags = tags.join("");
+  }
 
   let edicao = {
     note_id: note_id,
@@ -44,6 +53,7 @@ exports.notas = function(notas) {
       <a class="card-title" style="font-size:20px;"><strong><b>${note_title}</b></strong></a>
     </div>
     <div class="card-body text-secondary">
+    <div>${tags}</div>
       <p class="card-title" style="padding-top:5px;padding-bottom:5px;">${note_description}</p>
       <i class="material-icons copiar" data-id="${note_id}"
       title="Copiar código"
@@ -71,7 +81,9 @@ exports.notas = function(notas) {
   <!--ACE EDITOR-->
   <div class="row">
         <div class="col-sm-12 col-md-12">
-          <div class="editor" id="note_${note_id}" data-note='${JSON.stringify(edicao)}' style="width:100%;min-height:200px;">${escapeHtml(note_code)}</div>
+          <div class="editor" id="note_${note_id}" data-note='${JSON.stringify(
+    edicao
+  )}' style="width:100%;min-height:200px;">${escapeHtml(note_code)}</div>
         </div>
   </div>
   <div class="dropdown-divider"></div></div>`;
