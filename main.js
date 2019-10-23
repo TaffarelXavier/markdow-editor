@@ -10,7 +10,7 @@ function createWindow() {
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
   win = new BrowserWindow({
-    width: 1200,
+    width: width,
     height: height,
     frame: true, //Definir os campos de cima
     webPreferences: {
