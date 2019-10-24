@@ -1,14 +1,15 @@
 ﻿`use strict`;
 
-const { remote } = require("electron");
+var fs = require('fs');
+const path = require('path');
 
-const app = remote.app;
+var dir = process.env.LOCALAPPDATA + path.sep + 'codenotetx';
 
-const PATH_DB = app.getAppPath() + "/src/db/notes_db.db";
+if (!fs.existsSync(dir)){
+  fs.mkdirSync(dir);
+}	
 
-
-
-sqlite.connect(PATH_DB);
+sqlite.connect(dir + path.sep + 'notes_db.db');
 
 let categories = sqlite.run("SELECT * FROM category;");
 
@@ -34,6 +35,10 @@ exports.escapeHtml = function(unsafe) {
     .replace(/'/g, "&#039;");
 };
 
+exports.path_db = function(){
+  return dir  + path.sep + 'notes_db.db';
+}
+
 /**
  * Mostra as notas
  */
@@ -41,8 +46,6 @@ exports.notas = function(notas, rows) {
   let { note_id, note_title, note_description, note_code, lang_name } = notas;
 
   let tags = "";
-
-console.log(rows);
 
   if (rows.length > 0) {
     tags = rows.map(el => {

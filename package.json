@@ -1,7 +1,7 @@
 {
   "name": "electron-md-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicação para Snippers de Códigos",
   "main": "main.js",
   "scripts": {
     "dev": "nodemon --watch . --exec \"electron . --debug\"",
@@ -9,9 +9,10 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "com.example.app"
+    "appId": "com.example.app",
+    "productName":"Meu SnipperCodeTX"
   },
-  "author": "",
+  "author": "Taffarel Xavier",
   "license": "ISC",
   "dependencies": {
     "bootstrap-material-design": "^4.1.1",
@@ -32,6 +33,6 @@
       "test/*",
       "docs/*"
     ],
-    "ext": "jss"
+    "ext": "js"
   }
 }

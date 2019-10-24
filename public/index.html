@@ -28,14 +28,50 @@
       border: 0px solid red;
       border-radius: 5px;
     }
-    .list-group-item{
+
+    .list-group-item {
       /* border:5px solid lime !important; */
-      padding:10px 5px !important;
+      padding: 10px 5px !important;
       align-items: flex-end !important;
       justify-content: first baseline !important;
     }
-    .list-group-item:hover{
+
+    .list-group-item:hover {
       background: #cde9ce;
+    }
+
+    lines {
+      background: #f6f7f8;
+      background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+      background-repeat: no-repeat;
+      background-size: 800px 104px;
+      display: inline-block;
+      position: relative;
+      animation-duration: 1s;
+      -webkit-animation-duration: 1s;
+      animation-fill-mode: forwards;
+      -webkit-animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      -webkit-animation-iteration-count: infinite;
+      animation-name: placeholderShimmer;
+      -webkit-animation-name: placeholderShimmer;
+      animation-timing-function: linear;
+      -webkit-animation-timing-function: linear;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .line-30{
+      height: 30px;
+    }
+
+    @-webkit-keyframes placeholderShimmer {
+      0% {
+        background-position: -468px 0;
+      }
+
+      100% {
+        background-position: 468px 0;
+      }
     }
   </style>
 </head>
@@ -100,10 +136,16 @@
             <!-- CATEGORIAS -->
             <div class="row">
               <div class="col-ms-12 col-md-12">
-                <ul class="list-group" id="category"style="border-top:1px solid #ccc;">
+                <ul class="list-group" id="category" style="border-top:1px solid #ccc;">
                   <li class="list-group-item list-group-item-action">
-                    Carregando categorias...
                   </li>
+                  <lines class="line-30"></lines>
+                  <lines class="line-30"></lines>
+                  <lines class="line-30"></lines>
+                  <lines class="line-30"></lines>
+                  <lines class="line-30"></lines>
+                  <lines class="line-30"></lines>
+                  <lines class="line-30"></lines>
                 </ul>
               </div>
             </div>
@@ -159,7 +201,7 @@
   </div>
 
   <script src="assets/js/select2.config.js"></script>
-  <script src="assets/js/index.js"></script>
+  <script src="assets/js/index.min.js"></script>
   <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"></script>
   <script src="https://cdn.rawgit.com/FezVrasta/snackbarjs/1.1.0/dist/snackbar.min.js"></script>
   <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"></script>

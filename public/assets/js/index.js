@@ -6,21 +6,13 @@ const {
   modalCriarNota,
   ModalEditarNota,
   escapeHtml,
+  path_db
 } = require("../src/components/framework.js");
 
 const { remote, clipboard } = require("electron");
 
-const app = remote.app;
-
 //Caminho do Banco de Dados SQLITE3
-const PATH_DB = app.getAppPath() + "/src/db/notes_db.db";
-
-console.log(PATH_DB);
-
-console.log("app.getPath('userData')=" + app.getPath("userData"));
-console.log("app.getPath('home')=" + app.getPath("home"));
-console.log("exe=" + app.getPath("exe"));
-console.log("getAppPath()=" + app.getAppPath());
+const PATH_DB = path_db();
 
 const win = remote.getCurrentWindow();
 
@@ -253,6 +245,7 @@ $(document).ready(function() {
   $.snackbar(options);
 
   function carregarCategorias() {
+
     sqlite.connect(PATH_DB);
 
     var rows = document.getElementById("category");
@@ -273,6 +266,7 @@ $(document).ready(function() {
 
       //Ao clicar em alguma categoria:::
       item.onclick = function() {
+
         $(".list-group-item").removeClass(
           "list-group-item-action list-group-item-success"
         );
@@ -280,10 +274,19 @@ $(document).ready(function() {
           "list-group-item-action list-group-item-success",
           "disabled"
         );
+        
+        $("#get-notes").html(`<lines class="line-30"></lines>
+        <lines class="line-30"></lines>
+        <lines class="line-30"></lines>
+        <lines class="line-30"></lines>
+        <lines class="line-30"></lines>
+        <lines class="line-30"></lines>
+        <lines class="line-30"></lines>`);
+
         //Busca as categorias
         let rows = getNotesByCategoryId(category_id);
-
-        let content = "";
+        
+        let content = ``;
 
         if (Object.keys(rows).length > 0) {
           for (let data of rows) {
