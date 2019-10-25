@@ -43,6 +43,7 @@ exports.path_db = function(){
  * Mostra as notas
  */
 exports.notas = function(notas, rows) {
+
   let { note_id, note_title, note_description, note_code, lang_name } = notas;
 
   let tags = "";
@@ -61,7 +62,9 @@ exports.notas = function(notas, rows) {
     lang_name: lang_name
   };
 
-  let content = `<div id="note_card_${note_id}"><div class="card mb-10">
+  let content = `<div id="note_card_${note_id}">
+  
+  <div class="card mb-10">
     <div class="card-header" style="border-bottom:1px solid rgba(0,0,0,0.1);padding-top:15px;padding-bottom:15px;">
       <a class="card-title" style="font-size:20px;"><strong><b>${note_title}</b></strong></a>
     </div>
@@ -86,18 +89,15 @@ exports.notas = function(notas, rows) {
       data-nota='${JSON.stringify(edicao)}'>
         refresh
       </i>
-      <!--<pre><code contenteditable class="${lang_name}" id="note_${note_id}">${escapeHtml(
-    note_code
-  )}</code></pre>-->
     </div>
-  </div>
-  <!--ACE EDITOR-->
-  <div class="row">
-        <div class="col-sm-12 col-md-12">
-          <div class="editor" id="note_${note_id}" data-note='${JSON.stringify(
-    edicao
-  )}' style="width:100%;min-height:200px;">${escapeHtml(note_code)}</div>
-        </div>
+    <!--ACE EDITOR-->
+    <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="editor" id="note_${note_id}" data-note='${JSON.stringify(
+      edicao
+    )}' style="width:100%;min-height:200px;">${escapeHtml(note_code)}</div>
+          </div>
+    </div>
   </div>
   <div class="dropdown-divider"></div></div>`;
   return content;
