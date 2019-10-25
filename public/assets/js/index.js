@@ -7,6 +7,7 @@ const {
   ModalEditarNota,
   escapeHtml,
   path_db,
+  pesquisar,
 } = require("../src/components/framework.js");
 
 const { remote, clipboard } = require("electron");
@@ -42,7 +43,10 @@ $(document).ready(function() {
     let categories = document.getElementById("category").childNodes;
 
     for (let k = 0; k < categories.length; k++) {
-      if (categories[k].title.toLowerCase().includes(_value.toLowerCase())) {
+
+      var textoArray = pesquisar(categories[k].title.toLowerCase());
+
+      if (textoArray.includes(pesquisar(_value.toLowerCase()))) {
         $(categories[k])
           .removeAttr("hidden")
           .show();
@@ -54,6 +58,7 @@ $(document).ready(function() {
       }
     }
   });
+  
   /**
    * Adiciona os modais:
    * */
@@ -443,6 +448,9 @@ $(document).ready(function() {
       //FIM - BUSCA CATEGORIAS
     });
   }
+  
+  $('#get-notes').removeAttr('hidden');
+  $('#esqueleto').attr('hidden',true);
 
   carregarCategorias();
 }); //Fim: $(document).ready
