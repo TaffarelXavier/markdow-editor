@@ -33,6 +33,6 @@
       "test/*",
       "docs/*"
     ],
-    "ext": "js"
+    "ext": "jss"
   }
 }

@@ -43,7 +43,6 @@ $(document).ready(function() {
     let categories = document.getElementById("category").childNodes;
 
     for (let k = 0; k < categories.length; k++) {
-
       var textoArray = pesquisar(categories[k].title.toLowerCase());
 
       if (textoArray.includes(pesquisar(_value.toLowerCase()))) {
@@ -58,7 +57,7 @@ $(document).ready(function() {
       }
     }
   });
-  
+
   /**
    * Adiciona os modais:
    * */
@@ -233,6 +232,20 @@ $(document).ready(function() {
     ON t1.note_type_language = t2.lang_id WHERE note_category_id = ?
      ORDER BY t1.created_at DESC;`,
       [category_id]
+    );
+
+    sqlite.close();
+
+    return rows;
+  }
+
+  function getAllNotes() {
+
+    sqlite.connect(PATH_DB);
+
+    let rows = sqlite.run(
+      `SELECT * FROM notes AS t1 JOIN languages AS t2
+    ON t1.note_type_language = t2.lang_id ORDER BY t1.created_at DESC;`
     );
 
     sqlite.close();
@@ -448,9 +461,36 @@ $(document).ready(function() {
       //FIM - BUSCA CATEGORIAS
     });
   }
-  
-  $('#get-notes').removeAttr('hidden');
-  $('#esqueleto').attr('hidden',true);
+
+  //Carregar notas
+  var notes = getAllNotes();
+
+  if (notes.length > 0) {
+    
+    let content = ``;
+
+    getAllNotes().map(data => {
+
+          sqlite.connect(PATH_DB);
+
+          let rows = sqlite.run(
+            `SELECT tag_id, tag_name FROM tags AS t1 JOIN note_tag AS t2 ON t1.tag_id = t2.nt_tag_fk_id WHERE t2.nt_note_fk_id = ?`,
+            [data.note_id]
+          );
+
+          content += notas(data, rows);
+
+          sqlite.close();
+
+    });
+
+    $("#get-notes").html(content);
+
+    $("#sem-notas").removeAttr("hidden");
+
+    $("#esqueleto").attr("hidden", true);
+
+  }
 
   carregarCategorias();
 }); //Fim: $(document).ready
