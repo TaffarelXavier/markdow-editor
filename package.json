@@ -10,7 +10,7 @@
   },
   "build": {
     "appId": "com.example.app",
-    "productName":"Meu SnipperCodeTX"
+    "productName": "Meu SnipperCodeTX"
   },
   "author": "Taffarel Xavier",
   "license": "ISC",

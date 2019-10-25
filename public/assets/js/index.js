@@ -6,7 +6,7 @@ const {
   modalCriarNota,
   ModalEditarNota,
   escapeHtml,
-  path_db
+  path_db,
 } = require("../src/components/framework.js");
 
 const { remote, clipboard } = require("electron");
@@ -87,23 +87,22 @@ $(document).ready(function() {
       .val()
       .trim();
     if (categoryName != "") {
-      let sql = "INSERT INTO category(category_name) VALUES (?)";
+      let SQL = "INSERT INTO category(category_name) VALUES (?)";
 
-      db.run(sql, [categoryName], function(err) {
-        if (err) {
-          return console.error(err.message);
-        }
+      sqlite.connect(PATH_DB);
 
-        let lastId = this.lastID;
+      let lastId = sqlite.run(SQL, [categoryName]);
 
-        if (this.changes > 0) {
-          alert("Categoria criada com sucesso!");
-          var languages = document.getElementsByName("languages");
-          $(languages).append(
-            `<option value='${lastId}'>${categoryName}</option>`
-          );
-        }
-      });
+      if (lastId > 0) {
+        alert("Categoria criada com sucesso!");
+
+        var languages = document.getElementsByName("languages");
+
+        $(languages).append(
+          `<option value='${lastId}'>${categoryName.toUpperCase()}</option>`
+        );
+      }
+      sqlite.close();
     }
   });
 
@@ -245,7 +244,6 @@ $(document).ready(function() {
   $.snackbar(options);
 
   function carregarCategorias() {
-
     sqlite.connect(PATH_DB);
 
     var rows = document.getElementById("category");
@@ -266,7 +264,6 @@ $(document).ready(function() {
 
       //Ao clicar em alguma categoria:::
       item.onclick = function() {
-
         $(".list-group-item").removeClass(
           "list-group-item-action list-group-item-success"
         );
@@ -274,7 +271,7 @@ $(document).ready(function() {
           "list-group-item-action list-group-item-success",
           "disabled"
         );
-        
+
         $("#get-notes").html(`<lines class="line-30"></lines>
         <lines class="line-30"></lines>
         <lines class="line-30"></lines>
@@ -285,7 +282,7 @@ $(document).ready(function() {
 
         //Busca as categorias
         let rows = getNotesByCategoryId(category_id);
-        
+
         let content = ``;
 
         if (Object.keys(rows).length > 0) {
