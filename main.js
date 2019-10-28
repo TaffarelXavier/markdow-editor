@@ -33,7 +33,8 @@ function createWindow() {
     })
   );
 
-  win.setMenu(null);
+  //Menu
+  //win.setMenu(null);
 
   win.on("closed", () => {
     win = null;

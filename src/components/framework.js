@@ -44,13 +44,15 @@ exports.path_db = function(){
  */
 exports.notas = function(notas, rows) {
 
-  let { note_id, note_title, note_description, note_code, lang_name } = notas;
+//console.log(notas);
+
+  let { note_id, note_title, note_description, note_code, lang_name, note_category_id, note_type_language } = notas;
 
   let tags = "";
 
   if (rows.length > 0) {
     tags = rows.map(el => {
-      return `<strong style="padding:5px;border-radius:25px;border:1px solid #cccc;">${el.tag_name.toUpperCase()}</strong>`;
+      return `<strong class="tag">${el.tag_name.toUpperCase()}</strong>`;
     });
     tags = tags.join("");
   }
@@ -59,17 +61,20 @@ exports.notas = function(notas, rows) {
     note_id: note_id,
     note_title: note_title,
     note_description: note_description,
-    lang_name: lang_name
+    lang_name: lang_name,
+    category_id:note_category_id,
+    type_language:note_type_language
   };
 
   let content = `<div id="note_card_${note_id}">
   
   <div class="card mb-10">
     <div class="card-header" style="border-bottom:1px solid rgba(0,0,0,0.1);padding-top:15px;padding-bottom:15px;">
-      <a class="card-title" style="font-size:20px;"><strong><b>${note_title}</b></strong></a>
+      <a class="card-title" style="font-size:20px;"><strong><b class="note-title" data-note-id="${note_id}">${note_title}</b></strong></a>
     </div>
     <div class="card-body text-secondary">
     <div>${tags}</div>
+    <input value='${JSON.stringify(rows)}' type="hidden" id="tags_${note_id}"/>
       <p class="card-title" style="padding-top:5px;padding-bottom:5px;">${note_description}</p>
       <i class="material-icons copiar" data-id="${note_id}"
       title="Copiar código"
@@ -152,17 +157,17 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
     <div class="modal-body">
       <form id="formSave">
 
-        <div class="form-group">
+        <div class="form-group"> <!--TÍTULO-->
           <label for="recipient-name" class="col-form-label"><strong>Título:</strong></label>
           <input type="text" name="title" placeholder="Título do snipper-code" id="note-title" class="form-control" required>
         </div>
 
-        <div class="form-group">
+        <div class="form-group"> <!--DESCRIÇÃO-->
           <label for="recipient-name" class="col-form-label"><strong>Descrição:</strong></label>
           <input type="text" name="description" placeholder="Descrição do snipper-code" class="form-control" required>
         </div>
 
-        <div class="form-group">
+        <div class="form-group"> <!--TAGS-->
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
           <select id="select-tags" multiple="multiple" style="border:1px solid red !important;width:100%;" class="form-control">
           </select>
@@ -214,25 +219,6 @@ exports.modalCriarNota = function(titulo, idModal, idButton) {
   </div>
 </div>
 </div>
-<script>
-/*$("#select-tags").select2({
-  createTag: function(params) {
-    var term = $.trim(params.term);
-
-    if (term === "") {
-      return null;
-    }
-
-    return {
-      id: term,
-      text: term,
-      newTag: true // add additional parameters
-    };
-  },
-  tags: true,
-  tokenSeparators: [",", " "]
-});*/
-</script>
 `;
   return content;
 };
@@ -254,17 +240,21 @@ exports.ModalEditarNota = function(titulo, idModal) {
     <div class="modal-body">
       <form id="form-editar-nota">
         <input type="hidden" id="nota-id"/>
+
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Título:</strong></label>
           <input type="text" id="gd-title" class="form-control" required>
         </div>
+
         <div class="form-group">
           <label for="recipient-name" class="col-form-label"><strong>Descrição:</strong></label>
           <input type="text"  id="gd-description" class="form-control" required>
         </div>
-        <div class="form-group">
+
+        <div class="form-group"> <!--TAGS-->
           <label for="recipient-name" class="col-form-label"><strong>Tags:</strong></label>
-          <input type="text" id="gd-tags" class="form-control" required>
+          <select id="gd-select-tags" multiple="multiple" style="border:1px solid red !important;width:100%;" class="form-control">
+          </select>
         </div>
 
         <div class="row">
@@ -417,12 +407,11 @@ for (var i=0; i < defaultDiacriticsRemovalMap .length; i++){
 }
 
 // "what?" version ... http://jsperf.com/diacritics/12
-function removeSinaisDiacriticos (str) {
+  
+
+
+exports.removeSinaisDiacriticos = function (str) {
   return str.replace(/[^\u0000-\u007E]/g, function(a){ 
      return diacriticsMap[a] || a; 
   });
-}    
-
-exports.pesquisar = function(expressao) {
-  return removeSinaisDiacriticos(expressao);
-}
+}  

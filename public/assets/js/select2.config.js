@@ -14,6 +14,8 @@ const funcSelect2 = (el) => {
       };
     },
     tags: true,
-    tokenSeparators: [",", " "]
+    tokenSeparators: [",", " "],
+    placeholder: 'Tags...',
+    closeOnSelect: true
   });
 };

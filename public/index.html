@@ -1,289 +1,229 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <title>My SnipperCodeTX</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
-    />
-    <link
-      rel="stylesheet"
-      href="assets/css/bootstrap-material-design.min.css"
-    />
-    <link rel="stylesheet" href="assets/css/material-components-web.min.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css"
-    />
-    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script> -->
-    <!-- <link rel="stylesheet" href="assets/css/dracula.min.css" /> -->
-    <script src="assets/js/highlight.min.js"></script>
-    <style>
-      .list-group-item,
-      .copiar,
-      .material-icons {
-        cursor: pointer;
-      }
 
-      .card-title {
-        text-align: left;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>My SnipperCodeTX</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
+  <link rel="stylesheet" href="assets/css/bootstrap-material-design.min.css" />
+  <link rel="stylesheet" href="assets/css/material-components-web.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script> -->
+  <!-- <link rel="stylesheet" href="assets/css/dracula.min.css" /> -->
+  <script src="assets/js/highlight.min.js"></script>
+  <style>
+    .list-group-item,
+    .copiar,
+    .material-icons {
+      cursor: pointer;
+    }
 
-      .card {
-        border: 0px solid red;
-        border-radius: 5px;
-      }
+    .card-title {
+      text-align: left;
+    }
 
-      .list-group-item {
-        padding: 10px 5px !important;
-        align-items: flex-end !important;
-        justify-content: first baseline !important;
-      }
+    .card {
+      border: 0px solid red;
+      border-radius: 5px;
+    }
 
-      .list-group-item:hover {
-        background: #cde9ce;
-      }
+    .list-group-item {
+      padding: 10px 5px !important;
+      align-items: flex-end !important;
+      justify-content: first baseline !important;
+    }
 
-      .line-30 {
-        height: 30px;
-      }
-      .line-50 {
-        height: 50px;
-      }
+    .list-group-item:hover {
+      background: #cde9ce;
+    }
 
-      .br {
-        border-radius: 8px;
-      }
+    .line-30 {
+      height: 30px;
+    }
 
-      .wrapper {
-        width: 0px;
-        animation: fullView 0.5s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
+    .line-50 {
+      height: 50px;
+    }
 
-      .comment {
-        background: #777;
-        margin-top: 15px;
-      }
+    .br {
+      border-radius: 8px;
+    }
 
-      @keyframes fullView {
-        100% {
-          width: 100%;
-        }
-      }
+    .wrapper {
+      width: 0px;
+      animation: fullView 0.5s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
 
-      .animate {
-        animation: shimmer 2s infinite linear;
-        background: linear-gradient(
-          to right,
+    .comment {
+      background: #777;
+      margin-top: 15px;
+    }
+
+    @keyframes fullView {
+      100% {
+        width: 100%;
+      }
+    }
+
+    .animate {
+      animation: shimmer 2s infinite linear;
+      background: linear-gradient(to right,
           #eff1f3 4%,
           #e2e2e2 25%,
-          #eff1f3 36%
-        );
-        background-size: 1000px 100%;
+          #eff1f3 36%);
+      background-size: 1000px 100%;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -1000px 0;
       }
 
-      @keyframes shimmer {
-        0% {
-          background-position: -1000px 0;
-        }
-        100% {
-          background-position: 1000px 0;
-        }
+      100% {
+        background-position: 1000px 0;
       }
-    </style>
-  </head>
+    }
 
-  <body
-    style="border:0px solid #ccc;padding:0px;position: absolute;overflow: auto; width:100%;height: 100%; "
-  >
-    <!-- NAV BAR -->
-    <header
-      class="mdc-top-app-bar"
-      style="background:#018786;max-width: 100% !important;padding:0px !important;z-index: 1 !important;"
-    >
-      <div class="mdc-top-app-bar__row">
-        <section
-          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"
-        >
-          <span class="mdc-top-app-bar__title">My SnipperCodeTX</span>
-        </section>
-        <section
-          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end"
-        >
-          <button
-            onclick="javascript:window.location.reload()"
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            aria-label="Download"
-          >
-            refresh
-          </button>
-          <button
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            id="abrir-dev-tools"
-            aria-label="Download"
-          >
-            remove_red_eye
-          </button>
-          <button
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            aria-label="Print this page"
-          >
-            print
-          </button>
-          <button
-            class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
-            aria-label="Bookmark this page"
-            id="close-this-window"
-          >
-            close
-          </button>
-        </section>
-      </div>
-    </header>
-    <br /><br />
-    <div class="container">
-      <br />
-      <div class="row">
-        <div class="col-sm-12 col-md-12">
-          <div class="row">
-            <!-- CATEGORIAS -->
-            <div class="col-sm-4 col-md-4" style="border:1px dotted #ccc;">
-              <div class="row">
-                <div class="col-ms-12 col-md-12">
-                  <div
-                    class="alert alert-success"
-                    style="border:1px dashed #ccc;margin-top:15px !important;"
-                  >
-                    <button
-                      class="float-right"
-                      title="Clique para adicionar uma nova categoria"
-                      data-toggle="modal"
-                      data-target="#exampleModal"
-                      id="abrir-modal-criador-categoria"
-                    >
-                      <i class="material-icons">
-                        add_circle_outline
-                      </i>
-                    </button>
-                    <strong>Suas Categorias:</strong>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-ms-12 col-md-12">
-                  <div class="input-group mb-3">
-                    <input
-                      type="search"
-                      class="form-control"
-                      id="categoria"
-                      placeholder="Pesquisar por nome, descrição ou linguagem"
-                      autofocus
-                    />
-                  </div>
-                </div>
-              </div>
-              <!-- CATEGORIAS -->
-              <div class="row">
-                <div class="col-ms-12 col-md-12">
-                  <ul
-                    class="list-group"
-                    id="category"
-                    style="border-top:1px solid #ccc;"
-                  >
-                    <li class="list-group-item list-group-item-action"></li>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                  </ul>
+    .tag {
+      padding: 5px;
+      border-radius: 25px;
+      border: 1px solid #cccc;
+      margin-right: 2px;
+    }
+
+    mark {
+      background: yellow !important;
+      color: black;
+    }
+  </style>
+</head>
+
+<body style="border:0px solid #ccc;padding:0px;position: absolute;overflow: auto; width:100%;height: 100%; ">
+  <!-- NAV BAR -->
+  <header class="mdc-top-app-bar"
+    style="background:#018786;max-width: 100% !important;padding:0px !important;z-index: 1 !important;">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        <span class="mdc-top-app-bar__title">My SnipperCodeTX</span>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+        <button onclick="javascript:window.location.reload()"
+          class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded" aria-label="Download">
+          refresh
+        </button>
+        <button class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded" id="abrir-dev-tools"
+          aria-label="Download">
+          remove_red_eye
+        </button>
+        <button id="tela-inicial" class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
+          aria-label="Print this page">
+          home
+        </button>
+        <button class="mdc-icon-button material-icons mdc-top-app-bar__action-item--unbounded"
+          aria-label="Bookmark this page" id="close-this-window">
+          close
+        </button>
+      </section>
+    </div>
+  </header>
+  <br /><br />
+  <div class="container">
+    <br />
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <div class="row">
+          <!-- CATEGORIAS -->
+          <div class="col-sm-4 col-md-4" style="border:1px dotted #ccc;">
+            <div class="row">
+              <div class="col-ms-12 col-md-12">
+                <div class="alert alert-success" style="border:1px dashed #ccc;margin-top:15px !important;">
+                  <button class="float-right" title="Clique para adicionar uma nova categoria" data-toggle="modal"
+                    data-target="#exampleModal" id="abrir-modal-criador-categoria">
+                    <i class="material-icons">
+                      add_circle_outline
+                    </i>
+                  </button>
+                  <strong>Suas Categorias:</strong>
                 </div>
               </div>
             </div>
-            <!-- CONTEÚDO -->
-            <div class="col-sm-8 col-md-8" style="">
-              <div class="row">
-                <div class="col-md-12">
-                  <!-- PESQUISAR NOTAS -->
-                  <div class="input-group mb-3">
-                    <div
-                      class="input-group-prepend"
-                      style="border:0px solid red;"
-                    >
-                      <button
-                        class=""
-                        style="border:0px solid lime;height: 50%;margin-top:40%;"
-                      >
-                        <i class="material-icons">
-                          search
-                        </i>
-                      </button>
-                    </div>
-                    <input
-                      type="search"
-                      class="form-control"
-                      placeholder="Pesquisar por nome, descrição ou linguagem"
-                      autofocus
-                    />
-                    <button
-                      class="mdc-fab mdc-fab--extended"
-                      data-toggle="modal"
-                      data-target="#modalCriarNota"
-                    >
-                      <span class="material-icons mdc-fab__icon">add</span>
-                      <span class="mdc-fab__label">Criar nova nota</span>
-                    </button>
-                  </div>
+            <div class="row">
+              <div class="col-ms-12 col-md-12">
+                <div class="input-group mb-3">
+                  <input type="search" class="form-control" id="categoria"
+                    placeholder="Pesquisar por nome, descrição ou linguagem" autofocus />
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <!-- <span data-toggle=snackbar data-content="This is my awesome snackbar!"></span> -->
-                  <div id="esqueleto">
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
-                    <div class="comment br animate line-30"></div>
+            </div>
+            <!-- CATEGORIAS -->
+            <div class="row">
+              <div class="col-ms-12 col-md-12">
+                <ul class="list-group" id="category" style="border-top:1px solid #ccc;">
+                  <li class="list-group-item list-group-item-action"></li>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- CONTEÚDO -->
+          <div class="col-sm-8 col-md-8" style="">
+            <div class="row">
+              <div class="col-md-12">
+                <!-- PESQUISAR NOTAS -->
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend" style="border:0px solid red;">
+                    <button class="" style="border:0px solid lime;height: 50%;margin-top:40%;">
+                      <i class="material-icons">
+                        search
+                      </i>
+                    </button>
                   </div>
-                  <div
-                    id="get-notes"
-                    style="border:0px solid red;overflow: auto !important;padding-left:20px;padding-right: 20px;max-height: 800px;"
-                  >
-                    <div
-                    hidden
-                      style="display: flex;
+                  <input type="search" class="form-control" placeholder="Pesquisar por nome, descrição ou tag" autofocus
+                    id="input-pesquisar-geral" />
+                  <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
+                    <span class="material-icons mdc-fab__icon">add</span>
+                    <span class="mdc-fab__label">Criar nova nota</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <!-- <span data-toggle=snackbar data-content="This is my awesome snackbar!"></span> -->
+                <div id="esqueleto">
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                  <div class="comment br animate line-30"></div>
+                </div>
+                <div id="get-notes"
+                  style="border:0px solid red;overflow: auto !important;padding-left:20px;padding-right: 20px;max-height: 800px;">
+                  <div hidden style="display: flex;
           height: 400px;
           text-align: center;
           flex-direction: column;
           justify-content: center;
           align-content: center;
-          align-items: center;"
-          id="sem-notas"
-                    >
-                      <h3>Hey!</h3>
-                      <h4>Você não tem nenhuma nota.</h4>
-                      <button
-                        class="mdc-fab mdc-fab--extended"
-                        data-toggle="modal"
-                        data-target="#modalCriarNota"
-                      >
-                        <span class="material-icons mdc-fab__icon">add</span>
-                        <span class="mdc-fab__label">Criar nova nota :)</span>
-                      </button>
-                    </div>
+          align-items: center;" id="sem-notas">
+                    <h3>Hey!</h3>
+                    <h4>Você não tem nenhuma nota.</h4>
+                    <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
+                      <span class="material-icons mdc-fab__icon">add</span>
+                      <span class="mdc-fab__label">Criar nova nota :)</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -292,18 +232,21 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="assets/js/select2.config.js"></script>
-    <script src="assets/js/index.js"></script>
-    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"></script>
-    <script src="https://cdn.rawgit.com/FezVrasta/snackbarjs/1.1.0/dist/snackbar.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-beautify.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <script>
+  <script src="assets/js/select2.config.js"></script>
+  <script src="assets/js/index.js"></script>
+  <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"></script>
+  <script src="https://cdn.rawgit.com/FezVrasta/snackbarjs/1.1.0/dist/snackbar.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-beautify.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"></script>
+  <script>
       //const $ = require("jQuery");
       //$("body").bootstrapMaterialDesign();
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>

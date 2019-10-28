@@ -42,7 +42,12 @@
             autoScrollEditorIntoView: true,
             copyWithEmptySelection: true,
         });
-
+        
+        setTimeout(() => {
+            var beautify = ace.require("ace/ext/beautify"); // get reference to extension
+            beautify.beautify(editor.session);  
+        }, 500);
+       
         //beautify.beautify(editor.session);
         document.getElementById("formatar").onclick = function () {
             var beautify = ace.require("ace/ext/beautify"); // get reference to extension
