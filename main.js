@@ -10,8 +10,8 @@ function createWindow() {
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
   win = new BrowserWindow({
-    width: width - 200,
-    height: height - 100,
+    width: width - 400,
+    height: height - 50,
     frame: true, //Definir os campos de cima
     webPreferences: {
       nodeIntegration: true,
@@ -34,7 +34,7 @@ function createWindow() {
   );
 
   //Menu
-  //win.setMenu(null);
+  win.setMenu(null);
 
   win.on("closed", () => {
     win = null;
