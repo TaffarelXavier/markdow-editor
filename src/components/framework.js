@@ -100,7 +100,7 @@ exports.notas = function(notas, rows) {
           <div class="col-sm-12 col-md-12">
             <div class="editor" id="note_${note_id}" data-note='${JSON.stringify(
       edicao
-    )}' style="width:100%;min-height:200px;">${escapeHtml(note_code)}</div>
+    )}' style="width:100%;">${escapeHtml(note_code)}</div>
           </div>
     </div>
   </div>

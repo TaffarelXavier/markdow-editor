@@ -94,7 +94,9 @@ function funcoesNota() {
 
   //Para copiar uma nota:
   $(".copiar").each(function(index, element) {
+
     $(this).click(function(ev) {
+
       let note_id = $(this).attr("data-id");
 
       var editor = ace.edit(document.getElementById(`note_${note_id}`));
@@ -122,13 +124,19 @@ function funcoesNota() {
 
     let { lang_name } = JSON.parse(_this.attr("data-note"));
 
-    var editor = ace.edit(el);
+    var editor = ace.edit(el,{
+      mode: "ace/mode/" + lang_name,
+      maxLines: 800,
+      wrap: true,
+      autoScrollEditorIntoView: true,
+      minLines: 2
+    });
 
     el.style.fontSize = "16px"; //1.5vmin
 
     editor.setTheme("ace/theme/dracula");
 
-    editor.session.setMode("ace/mode/" + lang_name);
+    //editor.session.setMode("ace/mode/" + lang_name);
 
     editor.session.setTabSize(4);
 
