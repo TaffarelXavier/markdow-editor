@@ -9,10 +9,8 @@ const {
   path_db,
   removeSinaisDiacriticos
 } = require("../src/components/framework.js");
-
 const { Category } = require("../src/classes/Category");
 const { Note } = require("../src/classes/Note");
-
 const { remote, clipboard } = require("electron");
 
 //Caminho do Banco de Dados SQLITE3
@@ -276,8 +274,99 @@ function carregarCategorias() {
   });
 }
 
+function mergeArrayWithDiff(arrayA, arrayB) {
+  var result = [...arrayA, ...arrayB].reduce((acc, item) => {
+    let found = acc.find(x => x.category_name === item.category_name);
+    if (found) {
+      found.count += item.count;
+    } else {
+      acc.push(Object.assign({}, item));
+    }
+    return acc;
+  }, []);
+  return result;
+}
+
+function carregarTodasCategoria() {
+  setTimeout(() => {
+    var rows = document.getElementById("gd-get-categories");
+
+    //console.log(arrayA);
+    var arrayA = Category.getCategorieWithCountNotes();
+    //console.log(arrayB);
+
+    var arrayB = Category.all();
+
+    arrayB = arrayB.map(el => {
+      el.count = 0;
+      return el;
+    });
+
+    var result = mergeArrayWithDiff(arrayA, arrayB);
+
+    result.map(category => {
+      var cat = Category.getCategorieWithCountNotes();
+
+      var item = document.createElement("li");
+
+      $(item)
+        .addClass("mdc-list-item mdc-ripple-upgraded")
+        .css({ borderBottom: "1px dashed #ccc", padding: "0px !important" })
+        .html(
+          `<span class="mdc-list-item__text">${category.category_name.toUpperCase()}[${
+            category.count
+          }]</span>
+          <!--<span class="mdc-list-item__meta material-icons" aria-hidden="true" data-category-id='${
+            category.category_id
+          }'>delete</span>-->
+          <span class="mdc-list-item__meta material-icons remove-category"
+           aria-hidden="true" data-category='${JSON.stringify(
+             category
+           )}'>delete</span>
+        `
+        )
+        .attr("id", "category__" + category.category_id)
+        .attr("data-category", JSON.stringify(category))
+        .attr("title", category.category_name.toUpperCase());
+
+      rows.appendChild(item);
+    });
+
+    $(".remove-category").click(function() {
+
+      var { category_id, count } = JSON.parse($(this).attr("data-category"));
+
+      let options = {
+        type: "question",
+        buttons: ["Não", "Sim"],
+        title: "Deseja realmente excluir esta categoria?",
+        message: "Esta operação não poderá ser revertida.",
+        detail: "Algum detalhe aqui",
+        defaultId: 0,
+        cancelId: -1
+      };
+
+      remote.dialog.showMessageBox(win, options, response => {
+        if (response == 1) {
+          if (count > 0) {
+            alert(
+              "Operação não permitida, porque há notas relacionadas a esta categoria."
+            );
+          } else {
+            Category.delete(category_id);
+            $(`#category__${category_id}`).remove();
+            carregarCategorias();
+          }
+        }
+      });
+    });
+  }, 1000);
+}
+
 // Pode usar o jQuery normalmente agora.
 $(document).ready(function() {
+  carregarTodasCategoria();
+
   //Abre o modal de categorias:
   $("#abrir-modal-criador-categoria").click(function() {
     setTimeout(function() {
@@ -480,9 +569,6 @@ $(document).ready(function() {
         }
         return el.text;
       });
-
-    let sql = `INSERT INTO notes(note_title, note_description, note_code,
-        note_category_id, note_type_language, created_at) VALUES (?,?,?,?,?,?);`;
 
     var obj = {
       note_title: title,

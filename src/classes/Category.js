@@ -39,8 +39,8 @@ class Category{
     try {
       var conn = Category.conn();
       var res = conn.run(
-        `DELETE FROM ${Category.tableName()} WHERE category_name = ? OR category_id = ?`,
-        [category_id.toUpperCase(), category_id]
+        `DELETE FROM ${Category.tableName()} WHERE category_id = ?`,
+        [category_id]
       );
       if (res.error) return console.error(res.error);
       conn.close();
@@ -86,6 +86,19 @@ class Category{
     try {
       var conn = Category.conn();
       var res = conn.run(`SELECT * FROM ${Category.tableName()}`);
+      if (res.error) return console.error(res.error);
+      conn.close();
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  static getCategorieWithCountNotes() {
+    try {
+      var conn = Category.conn();
+      var res = conn.run(`SELECT note_category_id, category_id, category_name, COUNT(*) as count FROM notes as t1
+      JOIN category as t2 ON t2.category_id = t1.note_category_id
+      GROUP BY note_category_id`);
       if (res.error) return console.error(res.error);
       conn.close();
       return res;

@@ -130,6 +130,9 @@ exports.modalCategory = function(titulo, idModal, idButton) {
               <input type="text" class="form-control" autofocus id="category-name">
             </div>
           </form>
+
+      <ul class="mdc-list" id="gd-get-categories" style="max-height: 400px;overflow: auto;">
+        </ul>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
