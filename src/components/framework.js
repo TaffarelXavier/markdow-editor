@@ -75,7 +75,7 @@ exports.notas = function(notas, rows) {
     <div class="card-body text-secondary">
     <div>${tags}</div>
     <input value='${JSON.stringify(rows)}' type="hidden" id="tags_${note_id}"/>
-      <p class="card-title" style="padding-top:5px;padding-bottom:5px;">${note_description}</p>
+      <p class="card-description" style="padding-top:5px;padding-bottom:5px;">${note_description}</p>
       <i class="material-icons copiar" data-id="${note_id}"
       title="Copiar código"
       id="copiar_${note_id}" title="Clique para copiar">file_copy</i>

@@ -7,7 +7,7 @@ const {
   ModalEditarNota,
   escapeHtml,
   path_db,
-  removeSinaisDiacriticos
+  removeSinaisDiacriticos,
 } = require("../src/components/framework.js");
 const { Category } = require("../src/classes/Category");
 const { Note } = require("../src/classes/Note");
@@ -39,7 +39,7 @@ function funcoesNota() {
       note_tags,
       note_type_language,
       category_id,
-      type_language
+      type_language,
     } = JSON.parse($(this).attr("data-nota"));
 
     var categoriaElement = document.getElementById("gd-gategory"),
@@ -109,7 +109,7 @@ function funcoesNota() {
       var options = {
         content: "Código copiado com sucesso!", // text of the snackbar
         style: "toast", // add a custom class to your snackbar
-        timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
+        timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
       };
 
       $.snackbar(options);
@@ -136,7 +136,7 @@ function funcoesNota() {
 
     editor.setOptions({
       autoScrollEditorIntoView: true,
-      copyWithEmptySelection: true
+      copyWithEmptySelection: true,
     });
   });
 
@@ -161,7 +161,7 @@ function funcoesNota() {
       message: "Esta operação não poderá ser revertida.",
       detail: "Algum detalhe aqui",
       defaultId: 0,
-      cancelId: -1
+      cancelId: -1,
     };
 
     remote.dialog.showMessageBox(win, options, response => {
@@ -333,7 +333,6 @@ function carregarTodasCategoria() {
     });
 
     $(".remove-category").click(function() {
-
       var { category_id, count } = JSON.parse($(this).attr("data-category"));
 
       let options = {
@@ -343,7 +342,7 @@ function carregarTodasCategoria() {
         message: "Esta operação não poderá ser revertida.",
         detail: "Algum detalhe aqui",
         defaultId: 0,
-        cancelId: -1
+        cancelId: -1,
       };
 
       remote.dialog.showMessageBox(win, options, response => {
@@ -382,7 +381,7 @@ $(document).ready(function() {
   $("#categoria").keyup(function() {
     let _value = $(this);
 
-    _value = _value.val();
+    var keyword = removeSinaisDiacriticos(_value.val().toLowerCase());
 
     let categories = document.getElementById("category").childNodes;
 
@@ -391,7 +390,7 @@ $(document).ready(function() {
         categories[k].title.toLowerCase()
       );
 
-      if (textoArray.includes(removeSinaisDiacriticos(_value.toLowerCase()))) {
+      if (textoArray.includes(keyword)) {
         $(categories[k])
           .removeAttr("hidden")
           .show();
@@ -402,19 +401,30 @@ $(document).ready(function() {
           .hide();
       }
     }
+
+    $("#category > li").unmark({
+      done: function() {
+        $("#category > li").mark(keyword);
+      },
+    });
   });
 
   $("#input-pesquisar-geral").on("input", function() {
+
     var _this = $(this);
 
     var textoPesquisado = removeSinaisDiacriticos(_this.val().toLowerCase());
 
+    var cardTitle = document.getElementsByClassName("card-description");
+
     $(".note-title").each((i, el) => {
+
       var textoElemento = removeSinaisDiacriticos(el.innerText.toLowerCase());
+      var description = removeSinaisDiacriticos(cardTitle[i].innerText.toLowerCase());
 
       var nota_id = parseInt($(el).attr("data-note-id"));
 
-      if (textoElemento.includes(textoPesquisado)) {
+      if (textoElemento.includes(textoPesquisado) || description.includes(textoPesquisado) ) {
         $("#note_card_" + nota_id)
           .removeAttr("hidden")
           .show();
@@ -429,13 +439,13 @@ $(document).ready(function() {
     if (textoPesquisado.length > 0) {
       // Read the keyword
       var keyword = textoPesquisado;
-      $(".note-title").unmark({
+      $(".note-title, .card-description").unmark({
         done: function() {
-          $(".note-title").mark(keyword, options);
-        }
+          $(".note-title, .card-description").mark(keyword, options);
+        },
       });
     } else {
-      $(".note-title").unmark();
+      $(".note-title, .card-description").unmark();
     }
   });
 
@@ -509,7 +519,7 @@ $(document).ready(function() {
       note_description: description,
       note_code: code.innerText,
       note_category_id: category[category.selectedIndex].value,
-      note_type_language: language[language.selectedIndex].value
+      note_type_language: language[language.selectedIndex].value,
     };
 
     console.log(Note.update(obj));
@@ -564,7 +574,7 @@ $(document).ready(function() {
           );
           arrInserTags.push({
             tag_id: last_insert_id,
-            text: el.text.toLowerCase()
+            text: el.text.toLowerCase(),
           });
         }
         return el.text;
@@ -575,7 +585,7 @@ $(document).ready(function() {
       note_description: description,
       note_code: code,
       note_category_id: category.value,
-      note_type_language: language.value
+      note_type_language: language.value,
     };
 
     obj = Note.create(obj);
@@ -612,7 +622,7 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
