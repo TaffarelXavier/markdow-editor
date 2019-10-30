@@ -12,7 +12,7 @@ const {
 
 const { Category } = require("../src/classes/Category");
 const { Note } = require("../src/classes/Note");
-const { Language } = require("../src/classes/Language");
+const { Tag } = require("../src/classes/Tag");
 const { remote, clipboard } = require("electron");
 
 //Caminho do Banco de Dados SQLITE3
@@ -370,14 +370,11 @@ $(document).ready(function() {
 
   //Carregar as linguagens:
 
-  Language.all().map(({
-    lang_id,
-    lang_name
-}) => {
-
-    $('#datalist-languages').append(`<option value='${lang_name.toUpperCase()}' />`);
-});
-
+  Tag.all().map(({ tag_name }) => {
+    $("#datalist-languages").append(
+      `<option value='${tag_name.toUpperCase()}' />`
+    );
+  });
 
   //Abre o modal de categorias:
   $("#abrir-modal-criador-categoria").click(function() {
