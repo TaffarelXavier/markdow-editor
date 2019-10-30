@@ -7,10 +7,12 @@ const {
   ModalEditarNota,
   escapeHtml,
   path_db,
-  removeSinaisDiacriticos
+  removeSinaisDiacriticos,
 } = require("../src/components/framework.js");
+
 const { Category } = require("../src/classes/Category");
 const { Note } = require("../src/classes/Note");
+const { Language } = require("../src/classes/Language");
 const { remote, clipboard } = require("electron");
 
 //Caminho do Banco de Dados SQLITE3
@@ -39,7 +41,7 @@ function funcoesNota() {
       note_tags,
       note_type_language,
       category_id,
-      type_language
+      type_language,
     } = JSON.parse($(this).attr("data-nota"));
 
     var categoriaElement = document.getElementById("gd-gategory"),
@@ -109,7 +111,7 @@ function funcoesNota() {
       var options = {
         content: "Código copiado com sucesso!", // text of the snackbar
         style: "toast", // add a custom class to your snackbar
-        timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
+        timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
       };
 
       $.snackbar(options);
@@ -127,7 +129,7 @@ function funcoesNota() {
       maxLines: 800,
       wrap: true,
       autoScrollEditorIntoView: true,
-      minLines: 1
+      minLines: 1,
     });
 
     el.style.fontSize = "16px"; //1.5vmin
@@ -142,7 +144,7 @@ function funcoesNota() {
 
     editor.setOptions({
       autoScrollEditorIntoView: true,
-      copyWithEmptySelection: true
+      copyWithEmptySelection: true,
     });
   });
 
@@ -167,7 +169,7 @@ function funcoesNota() {
       message: "Esta operação não poderá ser revertida.",
       detail: "Algum detalhe aqui",
       defaultId: 0,
-      cancelId: -1
+      cancelId: -1,
     };
 
     remote.dialog.showMessageBox(win, options, response => {
@@ -342,7 +344,7 @@ function carregarTodasCategoria() {
         message: "Esta operação não poderá ser revertida.",
         detail: "Algum detalhe aqui",
         defaultId: 0,
-        cancelId: -1
+        cancelId: -1,
       };
 
       remote.dialog.showMessageBox(win, options, response => {
@@ -365,6 +367,17 @@ function carregarTodasCategoria() {
 // Pode usar o jQuery normalmente agora.
 $(document).ready(function() {
   carregarTodasCategoria();
+
+  //Carregar as linguagens:
+
+  Language.all().map(({
+    lang_id,
+    lang_name
+}) => {
+
+    $('#datalist-languages').append(`<option value='${lang_name.toUpperCase()}' />`);
+});
+
 
   //Abre o modal de categorias:
   $("#abrir-modal-criador-categoria").click(function() {
@@ -405,9 +418,31 @@ $(document).ready(function() {
     $(".categoria-nome").unmark({
       done: function() {
         $(".categoria-nome").mark(keyword);
-      }
+      },
     });
-    
+  });
+
+  $("#input-pesquisar-tag").on("input", ev => {
+    var keyword = ev.target.value;
+    if (keyword.length > 0) {
+      var tags = $(".tag");
+      $(".notas")
+        .removeClass("d-flex")
+        .attr("hidden", true)
+        .hide();
+      for (var k = 0; k < tags.size(); k++) {
+        if (tags[k].innerText.toUpperCase() == keyword.toUpperCase()) {
+          var note_id = tags[k].getAttribute("data-note-id");
+          $("#note_card_" + note_id)
+            .removeAttr("hidden")
+            .show();
+        }
+      }
+    } else {
+      $(".notas")
+        .removeAttr("hidden")
+        .show();
+    }
   });
 
   $("#input-pesquisar-geral").on("input", function() {
@@ -446,7 +481,7 @@ $(document).ready(function() {
       $(".note-title, .card-description").unmark({
         done: function() {
           $(".note-title, .card-description").mark(keyword, options);
-        }
+        },
       });
     } else {
       $(".note-title, .card-description").unmark();
@@ -523,7 +558,7 @@ $(document).ready(function() {
       note_description: description,
       note_code: code.innerText,
       note_category_id: category[category.selectedIndex].value,
-      note_type_language: language[language.selectedIndex].value
+      note_type_language: language[language.selectedIndex].value,
     };
 
     console.log(Note.update(obj));
@@ -578,7 +613,7 @@ $(document).ready(function() {
           );
           arrInserTags.push({
             tag_id: last_insert_id,
-            text: el.text.toLowerCase()
+            text: el.text.toLowerCase(),
           });
         }
         return el.text;
@@ -589,7 +624,7 @@ $(document).ready(function() {
       note_description: description,
       note_code: code,
       note_category_id: category.value,
-      note_type_language: language.value
+      note_type_language: language.value,
     };
 
     obj = Note.create(obj);
@@ -626,7 +661,7 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);

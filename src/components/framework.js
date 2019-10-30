@@ -52,7 +52,7 @@ exports.notas = function(notas, rows) {
 
   if (rows.length > 0) {
     tags = rows.map(el => {
-      return `<strong class="tag">${el.tag_name.toUpperCase()}</strong>`;
+      return `<strong class="tag" data-note-id='${note_id}'>${el.tag_name.toUpperCase()}</strong>`;
     });
     tags = tags.join("");
   }
@@ -66,7 +66,7 @@ exports.notas = function(notas, rows) {
     type_language:note_type_language
   };
 
-  let content = `<div id="note_card_${note_id}">
+  let content = `<div id="note_card_${note_id}" class="notas">
   
   <div class="card mb-10">
     <div class="card-header" style="border-bottom:1px solid rgba(0,0,0,0.1);padding-top:15px;padding-bottom:15px;">

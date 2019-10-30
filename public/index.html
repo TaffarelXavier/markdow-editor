@@ -193,7 +193,11 @@
                       </i>
                     </button>
                   </div>
-                  <input type="search" class="form-control" placeholder="Pesquisar por nome, descrição ou tag" autofocus
+                  <input type="search" class="form-control col-ms-2 col-md-2" placeholder="Pesq. por Tag"
+                    id="input-pesquisar-tag" list="datalist-languages" />
+                    <datalist id="datalist-languages">
+                    </datalist>
+                  <input type="search" class="form-control col-ms-10 col-md-10" placeholder="Pesquisar por nome e descrição" autofocus
                     id="input-pesquisar-geral" />
                   <button class="mdc-fab mdc-fab--extended" data-toggle="modal" data-target="#modalCriarNota">
                     <span class="material-icons mdc-fab__icon">add</span>
