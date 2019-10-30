@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8" />
   <title>My SnipperCodeTX</title>
@@ -10,8 +9,6 @@
   <link rel="stylesheet" href="assets/css/material-components-web.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
-  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script> -->
-  <!-- <link rel="stylesheet" href="assets/css/dracula.min.css" /> -->
   <script src="assets/js/highlight.min.js"></script>
   <style>
     .list-group-item,
@@ -95,19 +92,20 @@
     }
 
     .tag {
-      padding: 5px;
+      padding: 4px 4px;
       border-radius: 25px;
       border: 1px solid #cccc;
       margin-right: 2px;
     }
 
     mark {
-      background: yellow !important;
+      background: rgba(224, 224, 10, 0.842) !important;
       color: black;
+      padding:0 !important;
+      margin:0 !important;
     }
   </style>
 </head>
-
 <body style="border:0px solid #ccc;padding:0px;position: absolute;overflow: auto; width:100%;height: 100%; ">
   <!-- NAV BAR -->
   <header class="mdc-top-app-bar"
@@ -161,7 +159,7 @@
               <div class="col-ms-12 col-md-12">
                 <div class="input-group mb-3">
                   <input type="search" class="form-control" id="categoria"
-                    placeholder="Pesquisar por nome, descrição ou linguagem" autofocus />
+                    placeholder="Pesquisar por nome, descrição ou linguagem" />
                 </div>
               </div>
             </div>
@@ -248,7 +246,7 @@
                   <div class="dropdown-divider"></div>
                 </div>
                 <div id="get-notes"
-                  style="border:0px solid red;overflow: auto !important;padding-left:20px;padding-right: 20px;max-height: 2000px;">
+                  style="border:0px solid red;overflow: auto !important;padding-left:10px;padding-right: 10px;max-height: 1200px">
                   <div hidden style="display: flex;
           height: 400px;
           text-align: center;

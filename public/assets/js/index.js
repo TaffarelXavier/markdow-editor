@@ -7,7 +7,7 @@ const {
   ModalEditarNota,
   escapeHtml,
   path_db,
-  removeSinaisDiacriticos,
+  removeSinaisDiacriticos
 } = require("../src/components/framework.js");
 const { Category } = require("../src/classes/Category");
 const { Note } = require("../src/classes/Note");
@@ -39,7 +39,7 @@ function funcoesNota() {
       note_tags,
       note_type_language,
       category_id,
-      type_language,
+      type_language
     } = JSON.parse($(this).attr("data-nota"));
 
     var categoriaElement = document.getElementById("gd-gategory"),
@@ -94,9 +94,7 @@ function funcoesNota() {
 
   //Para copiar uma nota:
   $(".copiar").each(function(index, element) {
-
     $(this).click(function(ev) {
-
       let note_id = $(this).attr("data-id");
 
       var editor = ace.edit(document.getElementById(`note_${note_id}`));
@@ -111,7 +109,7 @@ function funcoesNota() {
       var options = {
         content: "Código copiado com sucesso!", // text of the snackbar
         style: "toast", // add a custom class to your snackbar
-        timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
+        timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
       };
 
       $.snackbar(options);
@@ -124,12 +122,12 @@ function funcoesNota() {
 
     let { lang_name } = JSON.parse(_this.attr("data-note"));
 
-    var editor = ace.edit(el,{
+    var editor = ace.edit(el, {
       mode: "ace/mode/" + lang_name,
       maxLines: 800,
       wrap: true,
       autoScrollEditorIntoView: true,
-      minLines: 2
+      minLines: 1
     });
 
     el.style.fontSize = "16px"; //1.5vmin
@@ -144,7 +142,7 @@ function funcoesNota() {
 
     editor.setOptions({
       autoScrollEditorIntoView: true,
-      copyWithEmptySelection: true,
+      copyWithEmptySelection: true
     });
   });
 
@@ -169,7 +167,7 @@ function funcoesNota() {
       message: "Esta operação não poderá ser revertida.",
       detail: "Algum detalhe aqui",
       defaultId: 0,
-      cancelId: -1,
+      cancelId: -1
     };
 
     remote.dialog.showMessageBox(win, options, response => {
@@ -230,13 +228,7 @@ function carregarCategorias() {
         "disabled"
       );
 
-      $("#get-notes").html(`<lines class="line-30"></lines>
-      <lines class="line-30"></lines>
-      <lines class="line-30"></lines>
-      <lines class="line-30"></lines>
-      <lines class="line-30"></lines>
-      <lines class="line-30"></lines>
-      <lines class="line-30"></lines>`);
+      $("#get-notes").html(``);
 
       //Busca as categorias
       let rows = getNotesByCategoryId(category_id);
@@ -269,7 +261,7 @@ function carregarCategorias() {
       .addClass("list-group-item justify-content-between")
       .css({ borderBottom: "1px dashed #ccc", padding: "0px !important" })
       .html(
-        `${row.category_name.toUpperCase()}
+        `<span class="categoria-nome">${row.category_name.toUpperCase()}</span>
  <span class='badge badge-primary badge-pill'
   style="float:right;margin:0">${row.count}</span>`
       )
@@ -350,7 +342,7 @@ function carregarTodasCategoria() {
         message: "Esta operação não poderá ser revertida.",
         detail: "Algum detalhe aqui",
         defaultId: 0,
-        cancelId: -1,
+        cancelId: -1
       };
 
       remote.dialog.showMessageBox(win, options, response => {
@@ -410,15 +402,15 @@ $(document).ready(function() {
       }
     }
 
-    $("#category > li").unmark({
+    $(".categoria-nome").unmark({
       done: function() {
-        $("#category > li").mark(keyword);
-      },
+        $(".categoria-nome").mark(keyword);
+      }
     });
+    
   });
 
   $("#input-pesquisar-geral").on("input", function() {
-
     var _this = $(this);
 
     var textoPesquisado = removeSinaisDiacriticos(_this.val().toLowerCase());
@@ -426,13 +418,17 @@ $(document).ready(function() {
     var cardTitle = document.getElementsByClassName("card-description");
 
     $(".note-title").each((i, el) => {
-
       var textoElemento = removeSinaisDiacriticos(el.innerText.toLowerCase());
-      var description = removeSinaisDiacriticos(cardTitle[i].innerText.toLowerCase());
+      var description = removeSinaisDiacriticos(
+        cardTitle[i].innerText.toLowerCase()
+      );
 
       var nota_id = parseInt($(el).attr("data-note-id"));
 
-      if (textoElemento.includes(textoPesquisado) || description.includes(textoPesquisado) ) {
+      if (
+        textoElemento.includes(textoPesquisado) ||
+        description.includes(textoPesquisado)
+      ) {
         $("#note_card_" + nota_id)
           .removeAttr("hidden")
           .show();
@@ -450,7 +446,7 @@ $(document).ready(function() {
       $(".note-title, .card-description").unmark({
         done: function() {
           $(".note-title, .card-description").mark(keyword, options);
-        },
+        }
       });
     } else {
       $(".note-title, .card-description").unmark();
@@ -527,11 +523,11 @@ $(document).ready(function() {
       note_description: description,
       note_code: code.innerText,
       note_category_id: category[category.selectedIndex].value,
-      note_type_language: language[language.selectedIndex].value,
+      note_type_language: language[language.selectedIndex].value
     };
 
     console.log(Note.update(obj));
-
+    alert("Nota editaca com sucesso!");
     return false;
   });
 
@@ -582,7 +578,7 @@ $(document).ready(function() {
           );
           arrInserTags.push({
             tag_id: last_insert_id,
-            text: el.text.toLowerCase(),
+            text: el.text.toLowerCase()
           });
         }
         return el.text;
@@ -593,7 +589,7 @@ $(document).ready(function() {
       note_description: description,
       note_code: code,
       note_category_id: category.value,
-      note_type_language: language.value,
+      note_type_language: language.value
     };
 
     obj = Note.create(obj);
@@ -630,7 +626,7 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
