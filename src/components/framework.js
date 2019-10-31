@@ -77,8 +77,8 @@ exports.notas = function(notas, rows) {
     <input value='${JSON.stringify(rows)}' type="hidden" id="tags_${note_id}"/>
       <p class="card-description" style="padding-top:5px;padding-bottom:5px;">${note_description}</p>
       <i class="material-icons copiar" data-id="${note_id}"
-      title="Copiar código"
-      id="copiar_${note_id}" title="Clique para copiar">file_copy</i>
+      title="Copiar o código snipper"
+      id="copiar_${note_id}">file_copy</i>
       <i class="material-icons excluir-nota"
       title="Excluir nota"
       data-nota-id="${note_id}">
@@ -89,11 +89,11 @@ exports.notas = function(notas, rows) {
       data-nota='${JSON.stringify(edicao)}'>
         edit
       </i>
-      <i class="material-icons open-code" 
+      <!--<i class="material-icons open-code" 
       title="Editar Nota"
       data-nota='${JSON.stringify(edicao)}'>
         refresh
-      </i>
+      </i>-->
     </div>
     <!--ACE EDITOR-->
     <div class="row">
@@ -137,6 +137,37 @@ exports.modalCategory = function(titulo, idModal, idButton) {
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
           <button type="button" class="btn btn-primary" id="${idButton}">Criar Categoria</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+exports.modalInfo = function(idModal) {
+  return `
+  <div class="modal fade" id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sobre</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <strong>Autor: Taffarel Xavier</strong><br/><hr/>
+              <strong>Redes Sociais:</strong><br/>
+              <a class="abrir-links" data-href='https://pt.stackoverflow.com/users/66026/taffarel-xavier'>Stackoverflow</a><br/>
+              <a class="abrir-links" data-href='https://twitter.com/TaffarelXavier7'>Twitter</a><br/>
+              <a class="abrir-links" data-href='https://github.com/TaffarelXavier'>Github</a><br/>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
         </div>
       </div>
     </div>

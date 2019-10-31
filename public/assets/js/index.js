@@ -7,13 +7,14 @@ const {
   ModalEditarNota,
   escapeHtml,
   path_db,
-  removeSinaisDiacriticos
+  removeSinaisDiacriticos,
+  modalInfo,
 } = require("../src/components/framework.js");
 
 const { Category } = require("../src/classes/Category");
 const { Note } = require("../src/classes/Note");
 const { Tag } = require("../src/classes/Tag");
-const { remote, clipboard } = require("electron");
+const { remote, clipboard, shell } = require("electron");
 
 //Caminho do Banco de Dados SQLITE3
 const PATH_DB = path_db();
@@ -41,7 +42,7 @@ function funcoesNota() {
       note_tags,
       note_type_language,
       category_id,
-      type_language
+      type_language,
     } = JSON.parse($(this).attr("data-nota"));
 
     var categoriaElement = document.getElementById("gd-gategory"),
@@ -111,7 +112,7 @@ function funcoesNota() {
       var options = {
         content: "Código copiado com sucesso!", // text of the snackbar
         style: "toast", // add a custom class to your snackbar
-        timeout: 2000 // time in milliseconds after the snackbar autohides, 0 is disabled
+        timeout: 2000, // time in milliseconds after the snackbar autohides, 0 is disabled
       };
 
       $.snackbar(options);
@@ -129,7 +130,7 @@ function funcoesNota() {
       maxLines: 800,
       wrap: true,
       autoScrollEditorIntoView: true,
-      minLines: 1
+      minLines: 1,
     });
 
     el.style.fontSize = "16px"; //1.5vmin
@@ -144,7 +145,7 @@ function funcoesNota() {
 
     editor.setOptions({
       autoScrollEditorIntoView: true,
-      copyWithEmptySelection: true
+      copyWithEmptySelection: true,
     });
   });
 
@@ -169,7 +170,7 @@ function funcoesNota() {
       message: "Esta operação não poderá ser revertida.",
       detail: "Algum detalhe aqui",
       defaultId: 0,
-      cancelId: -1
+      cancelId: -1,
     };
 
     remote.dialog.showMessageBox(win, options, response => {
@@ -371,7 +372,7 @@ function carregarTodasCategoria() {
         message: "Esta operação não poderá ser revertida.",
         detail: "Algum detalhe aqui",
         defaultId: 0,
-        cancelId: -1
+        cancelId: -1,
       };
 
       remote.dialog.showMessageBox(win, options, response => {
@@ -442,7 +443,7 @@ $(document).ready(function() {
     $(".categoria-nome").unmark({
       done: function() {
         $(".categoria-nome").mark(keyword);
-      }
+      },
     });
   });
 
@@ -487,7 +488,7 @@ $(document).ready(function() {
       $(".note-title, .card-description").unmark({
         done: function() {
           $(".note-title, .card-description").mark(keyword, options);
-        }
+        },
       });
     } else {
       $(".note-title, .card-description").unmark();
@@ -501,7 +502,8 @@ $(document).ready(function() {
   $("body").append(
     modalCategory("Criar nova categoria", "exampleModal", "idButton1"),
     modalCriarNota("Criar nova nota", "modalCriarNota", "buttonCriarNota"),
-    ModalEditarNota("Editar Nota", "modalEditarNota", "btnAlterarNota")
+    ModalEditarNota("Editar Nota", "modalEditarNota", "btnAlterarNota"),
+    modalInfo("modal-info-id")
   );
 
   $("#abrir-dev-tools").click(function() {
@@ -510,6 +512,11 @@ $(document).ready(function() {
 
   funcSelect2("#select-tags");
   funcSelect2("#gd-select-tags");
+
+  $(".abrir-links").click(function() {
+    var _link  = $(this).attr('data-href');
+    shell.openExternal(_link);
+  });
 
   //Modal: Evento ao abrir o modal:
   $("#modalCriarNota").on("show.bs.modal", function(event) {
@@ -564,7 +571,7 @@ $(document).ready(function() {
       note_description: description,
       note_code: code.innerText,
       note_category_id: category[category.selectedIndex].value,
-      note_type_language: language[language.selectedIndex].value
+      note_type_language: language[language.selectedIndex].value,
     };
 
     console.log(Note.update(obj));
@@ -619,7 +626,7 @@ $(document).ready(function() {
           );
           arrInserTags.push({
             tag_id: last_insert_id,
-            text: el.text.toLowerCase()
+            text: el.text.toLowerCase(),
           });
         }
         return el.text;
@@ -630,7 +637,7 @@ $(document).ready(function() {
       note_description: description,
       note_code: code,
       note_category_id: category.value,
-      note_type_language: language.value
+      note_type_language: language.value,
     };
 
     obj = Note.create(obj);
@@ -667,7 +674,7 @@ $(document).ready(function() {
   var options = {
     content: "Some text", // text of the snackbar
     style: "toast", // add a custom class to your snackbar
-    timeout: 1000 // time in milliseconds after the snackbar autohides, 0 is disabled
+    timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
   };
 
   $.snackbar(options);
