@@ -1,0 +1,9 @@
+ # Passos para a Instalação:
+
+Passo 1) Instalar o aplicativo executável: 'Meu SnipperCodeTX Setup 1.0.0.exe'
+Após a instalação, o aplicativo será aberto por padrão, feche-o.
+
+Passo 2) Copiar o arquivo 'notes_db.db' para a pasta (pode sobrescrever o existente)
+C:\Users\[SEU_NOME_DE_USUARIO]\AppData\Local\codenotetx
+
+Passo 3) Abra a aplicação no seu menu iniciar.

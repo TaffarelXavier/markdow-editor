@@ -34,7 +34,7 @@ function createWindow() {
   );
 
   //Menu
-  //win.setMenu(null);
+  win.setMenu(null);
 
   win.on("closed", () => {
     win = null;

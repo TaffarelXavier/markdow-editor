@@ -52,7 +52,7 @@ exports.notas = function(notas, rows) {
 
   if (rows.length > 0) {
     tags = rows.map(el => {
-      return `<strong class="tag" data-note-id='${note_id}'>${el.tag_name.toUpperCase()}</strong>`;
+      return `<strong class="tag" title="Clique para pesquisar todas as notas com esta tag" data-note-id='${note_id}'>${el.tag_name.toUpperCase()}</strong>`;
     });
     tags = tags.join("");
   }
